@@ -4,6 +4,7 @@ import "./assets/scss/App.scss";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
+import AddEstablishmentPage from "./pages/AddEstablishmentPage";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/logout" element={<LogoutPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/add-establishment" element={<AddEstablishmentPage />} />
       </Routes>
     </div>
   );

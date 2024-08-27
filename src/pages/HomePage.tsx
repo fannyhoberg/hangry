@@ -12,12 +12,14 @@ const HomePage = () => {
   const logout = () => {
     navigate("/logout");
   };
+
   return (
     <Container className="py-3 center-y">
       <div>
         <h1>Welcome to Hangry</h1>
         <Button onClick={login}>Log in</Button>
         <Button onClick={logout}>Log out</Button>
+        <Button onClick={() => navigate("/add-establishment")}>Add establishment</Button>
         <Map />
       </div>
     </Container>
