@@ -5,10 +5,13 @@ import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
 import AddEstablishmentPage from "./pages/AddEstablishmentPage";
+import Navigation from "./components/Navigation";
 
 function App() {
   return (
     <div id="App">
+      <Navigation />
+
       <Routes>
         {/* <Route path="*" element={<NotFoundPage />} /> */}
         <Route path="/" element={<HomePage />} />
