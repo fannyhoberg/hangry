@@ -1,4 +1,5 @@
-import { GoogleMap, LoadScript } from "@react-google-maps/api";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import useLocations from "../hooks/useGetEstablishments";
 
 const google_api_key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -16,12 +17,33 @@ const center = {
 };
 
 const Map = () => {
+  const { data: establishments, loading } = useLocations();
+
   return (
     <div className="map-wrapper">
       <LoadScript googleMapsApiKey={google_api_key}>
         <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
           {/* Child components, such as markers, info windows, etc. */}
-          <></>
+          <>
+            {loading && console.log("loading...")}
+
+            {establishments &&
+              establishments.map((marker) => {
+                console.log("Marker position:", {
+                  lat: marker.geopoint.latitude,
+                  lng: marker.geopoint.longitude,
+                });
+                return (
+                  <Marker
+                    key={marker._id}
+                    position={{
+                      lat: marker.geopoint.latitude,
+                      lng: marker.geopoint.longitude,
+                    }}
+                  />
+                );
+              })}
+          </>
         </GoogleMap>
       </LoadScript>
     </div>
