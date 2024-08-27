@@ -1,8 +1,15 @@
+import { Route, Routes } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import "./assets/scss/App.scss";
+
 function App() {
   return (
-    <>
-      <h1>Hangry - Grupp 4</h1>
-    </>
+    <div id="App">
+      <Routes>
+        {/* <Route path="*" element={<NotFoundPage />} /> */}
+        <Route path="/" element={<HomePage />} />
+      </Routes>
+    </div>
   );
 }
 
