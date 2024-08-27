@@ -1,25 +1,11 @@
-import { Button, Container } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Container } from "react-bootstrap";
 import Map from "../components/Map";
 
 const HomePage = () => {
-  const navigate = useNavigate();
-
-  const login = () => {
-    navigate("/login");
-  };
-
-  const logout = () => {
-    navigate("/logout");
-  };
-
   return (
     <Container className="py-3 center-y">
       <div>
         <h1>Welcome to Hangry</h1>
-        <Button onClick={login}>Log in</Button>
-        <Button onClick={logout}>Log out</Button>
-        <Button onClick={() => navigate("/add-establishment")}>Add establishment</Button>
         <Map />
       </div>
     </Container>
