@@ -3,6 +3,7 @@ import HomePage from "./pages/HomePage";
 import "./assets/scss/App.scss";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
+import LogoutPage from "./pages/LogoutPage";
 
 function App() {
   return (
@@ -11,8 +12,7 @@ function App() {
         {/* <Route path="*" element={<NotFoundPage />} /> */}
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
-
-        {/* Auth Routes */}
+        <Route path="/logout" element={<LogoutPage />} />
         <Route path="/signup" element={<SignupPage />} />
       </Routes>
     </div>
