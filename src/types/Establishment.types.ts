@@ -8,3 +8,5 @@ export interface Establishment {
     _id: string,
     geopoint: GeoPoint,
 }
+
+export type NewEstablishment = Omit<Establishment, "_id">;

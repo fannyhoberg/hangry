@@ -1,5 +1,5 @@
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import useLocations from "../hooks/useGetEstablishments";
+import useGetEstablishments from "../hooks/useGetEstablishments";
 
 const google_api_key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -17,7 +17,7 @@ const center = {
 };
 
 const Map = () => {
-  const { data: establishments, loading } = useLocations();
+  const { data: establishments, loading } = useGetEstablishments();
 
   return (
     <div className="map-wrapper">
