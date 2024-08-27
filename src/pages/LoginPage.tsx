@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
@@ -8,32 +8,25 @@ import Row from "react-bootstrap/Row";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-import { SignUpType } from "../types/User.types";
+import { LoginType } from "../types/User.types";
 import { FirebaseError } from "firebase/app";
-// import { toast } from "react-toastify";
 
-const SignupPage = () => {
+const LoginPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     handleSubmit,
     register,
-    watch,
     formState: { errors },
-  } = useForm<SignUpType>();
-  const { signup } = useAuth();
+  } = useForm<LoginType>();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
-  // Password ref
-  const passwordRef = useRef("");
-  passwordRef.current = watch("password");
-
-  const onSignup: SubmitHandler<SignUpType> = async (data) => {
+  const onLogin: SubmitHandler<LoginType> = async (data) => {
     setIsSubmitting(true);
 
     try {
-      await signup(data.email, data.password);
-      console.log("Something went wrong on Signup page");
-
+      await login(data.email, data.password);
+      console.log("You are logged in");
       navigate("/");
     } catch (err) {
       if (err instanceof FirebaseError) {
@@ -54,16 +47,16 @@ const SignupPage = () => {
         <Col md={{ span: 6, offset: 3 }}>
           <Card className="mb-3">
             <Card.Body>
-              <Card.Title className="mb-3">Sign Up</Card.Title>
+              <Card.Title className="mb-3">Log in</Card.Title>
 
-              <Form onSubmit={handleSubmit(onSignup)} className="mb-3">
+              <Form onSubmit={handleSubmit(onLogin)} className="mb-3">
                 <Form.Group controlId="email" className="mb-3">
                   <Form.Label>Email</Form.Label>
                   <Form.Control
                     placeholder="my-email@email.com"
                     type="email"
                     {...register("email", {
-                      required: "Please enter an email.",
+                      required: "Please enter your email.",
                     })}
                   />
                   {errors.email && (
@@ -79,47 +72,16 @@ const SignupPage = () => {
                     type="password"
                     autoComplete="new-password"
                     {...register("password", {
-                      required: "Please enter a password",
-                      minLength: {
-                        message: "Enter at least 6 characters",
-                        value: 3,
-                      },
+                      required: "Please enter your password",
                     })}
                   />
                   {errors.password && (
-                    <p className="invalid">
-                      {errors.password.message || "Invalid value"}
-                    </p>
-                  )}
-                  <Form.Text>At least 6 characters</Form.Text>
-                </Form.Group>
-
-                <Form.Group controlId="confirmPassword" className="mb-3">
-                  <Form.Label>Confirm Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    autoComplete="off"
-                    {...register("confirmPassword", {
-                      required: "Enter your password again please.",
-                      minLength: {
-                        message: "Enter at least 6 characters",
-                        value: 3,
-                      },
-                      validate: (value) => {
-                        return (
-                          value === passwordRef.current ||
-                          "The passwords does not match, try again"
-                        );
-                      },
-                    })}
-                  />
-                  {errors.confirmPassword && (
-                    <p>{errors.confirmPassword.message || "Invalid value"}</p>
+                    <p>{errors.password.message || "Invalid value"}</p>
                   )}
                 </Form.Group>
 
                 <Button disabled={isSubmitting} type="submit" variant="primary">
-                  {isSubmitting ? "Creating account..." : "Create Account"}
+                  {isSubmitting ? "Logging in..." : "Log in"}
                 </Button>
               </Form>
             </Card.Body>
@@ -130,4 +92,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default LoginPage;
