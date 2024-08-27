@@ -1,10 +1,12 @@
-import { GeoPoint } from "firebase/firestore";
+import { doc, GeoPoint, setDoc } from "firebase/firestore";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { getGeopoint } from "../services/geocodingAPI";
+import { newEstablishmentCol } from "../services/firebase";
 
 type Establishment = {
     _id: string;
@@ -21,10 +23,10 @@ type Establishment = {
     website?: string;
     facebook?: string;
     instagram?: string;
-    photos?: FileList;  // Or should I save only the photo Url ?? in DB and have photoFiles separate?
+    // photos?: FileList;  // Or should I save only the photo Url ?? in DB and have photoFiles separate?
 };
 
-type NewEstablishment = Omit<Establishment, "_id">;
+export type NewEstablishment = Omit<Establishment, "_id">;
 type EstablishmentFormData = Omit<NewEstablishment, "geopoint">
 
 const AddEstablishmentPage = () => {
@@ -32,14 +34,41 @@ const AddEstablishmentPage = () => {
 
     // validate address to ensure it is possible to geocode!
 
-    const onFormSubmit: SubmitHandler<EstablishmentFormData> = (data) => {
+    const addEstablishment = async (data: NewEstablishment) => {
+        const docRef = doc(newEstablishmentCol);
+        console.log("Docref: ", docRef)
+        console.log("Data: ", data)
+
+        try {
+            await setDoc(docRef, { ...data })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const onFormSubmit: SubmitHandler<EstablishmentFormData> = async (data) => {
         console.log(data);
         // if data.photos --> upload photoFiles to storage
 
+        try {
+            // Get geopoint from address
+            const payload = await getGeopoint(data.address);
+            console.log(payload)
 
-        // Get geopoint from address
+            if (!payload) {
+                throw new Error("No payload")
+            }
+            const newEstablishment: NewEstablishment = { ...data, geopoint: new GeoPoint(payload.lat, payload.lng) }
+            addEstablishment(newEstablishment);
+
+        } catch (error) {
+            console.log(error)
+        }
+
         // Create NewEstablishment obj with {...data, geopoint: geopoint}
+
         // Add to db
+
     }
 
     return (
@@ -52,7 +81,7 @@ const AddEstablishmentPage = () => {
 
                     <Form onSubmit={handleSubmit(onFormSubmit)}>
                         <Form.Group controlId="establishment-name" className="mb-3">
-                            <Form.Label>Establishment Name</Form.Label>
+                            <Form.Label>Establishment Name*</Form.Label>
                             <Form.Control
                                 autoComplete="organization"
                                 type="text"
@@ -64,7 +93,7 @@ const AddEstablishmentPage = () => {
                         </Form.Group>
 
                         <Form.Group controlId="address" className="mb-3">
-                            <Form.Label>Address</Form.Label>
+                            <Form.Label>Address*</Form.Label>
                             <Form.Control
                                 autoComplete="street-address"
                                 type="text"
@@ -75,20 +104,8 @@ const AddEstablishmentPage = () => {
                             {errors.address && <p style={{ color: "red" }}>{errors.address.message ?? "Invalid value"}</p>}
                         </Form.Group>
 
-                        <Form.Group controlId="post code" className="mb-3">
-                            <Form.Label>Post code</Form.Label>
-                            <Form.Control
-                                autoComplete="postal-code"
-                                type="text"
-                                {...register("post_code", {
-                                    required: "You must enter a post code"
-                                })}
-                            />
-                            {errors.address && <p style={{ color: "red" }}>{errors.address.message ?? "Invalid value"}</p>}
-                        </Form.Group>
-
                         <Form.Group controlId="city" className="mb-3">
-                            <Form.Label>City</Form.Label>
+                            <Form.Label>City*</Form.Label>
                             <Form.Control
                                 autoComplete="address-level2"
                                 type="text"
@@ -117,7 +134,7 @@ const AddEstablishmentPage = () => {
                         </Form.Group>
 
                         <Form.Group className="mb-3">
-                            <Form.Label>Category</Form.Label>
+                            <Form.Label>Category*</Form.Label>
                             <Form.Check
                                 id="category-cafe"
                                 label="Cafe"
@@ -232,7 +249,7 @@ const AddEstablishmentPage = () => {
                             <Form.Control
                                 accept="image/gif,image/jpeg,image/png,image/webp"
                                 type="file"
-                                {...register("photos")}
+                            // {...register("photos")}
                             />
                         </Form.Group>
 
