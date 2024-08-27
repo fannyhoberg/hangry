@@ -2,22 +2,21 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import {
-  CollectionReference,
-  DocumentData,
-  collection,
-  getFirestore,
+    CollectionReference,
+    DocumentData,
+    collection,
+    getFirestore,
 } from "firebase/firestore";
-import { Establishment } from "../types/Establishment.types";
-import { NewEstablishment } from "../pages/AddEstablishmentPage";
+import { Establishment, NewEstablishment } from "../types/Establishment.types";
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
@@ -34,11 +33,11 @@ export const storage = getStorage(app);
 
 // Helper to add type to collection references
 const createCollection = <T = DocumentData>(collectionName: string) => {
-  return collection(db, collectionName) as CollectionReference<T>;
+    return collection(db, collectionName) as CollectionReference<T>;
 };
 
-export const establishmentCol = createCollection<Establishment>("restaurants");
+export const establishmentCol = createCollection<Establishment>("establishments");
 export const newEstablishmentCol =
-  createCollection<NewEstablishment>("establishments");
+    createCollection<NewEstablishment>("establishments");
 
 export default app;
