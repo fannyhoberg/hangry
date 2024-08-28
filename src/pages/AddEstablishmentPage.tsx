@@ -1,36 +1,11 @@
-import { doc, DocumentData, GeoPoint, setDoc } from "firebase/firestore";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { getGeopoint } from "../services/geocodingAPI";
-import { newEstablishmentCol } from "../services/firebase";
-import { EstablishmentFormData, NewEstablishment } from "../types/Establishment.types";
-
-// Move to own file and use when updating as well :)
-const addEstablishment = async (data: EstablishmentFormData) => {
-    const docRef = doc(newEstablishmentCol);
-
-    // Get geopoint from address
-    const payload = await getGeopoint(data.address);
-
-    if (!payload) {
-        throw new Error("No payload");
-    }
-
-    // Add to DB incl geopoint
-    try {
-        await setDoc<NewEstablishment, DocumentData>(docRef, {
-            ...data,
-            geopoint: new GeoPoint(payload.lat, payload.lng),
-        });
-    } catch (error) {
-        // HANDLE ERROR BETTER
-        console.log(error);
-    }
-};
+import { EstablishmentFormData } from "../types/Establishment.types";
+import useAddEstablishment from "../hooks/useAddEstablishment";
 
 const AddEstablishmentPage = () => {
     const {
@@ -39,6 +14,7 @@ const AddEstablishmentPage = () => {
         register,
         formState: { errors },
     } = useForm<EstablishmentFormData>();
+    const { addEstablishment } = useAddEstablishment();
 
     // validate address to ensure it is possible to geocode!
 
