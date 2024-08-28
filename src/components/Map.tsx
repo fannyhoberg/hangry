@@ -8,8 +8,8 @@ const containerStyle = {
 };
 
 const defaultCenter = {
-    lat: -34.397,
-    lng: 150.644
+    lat: 55.6049635786228,
+    lng: 13.001277692558267,
 }
 
 const Map = () => {
