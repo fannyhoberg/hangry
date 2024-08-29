@@ -8,8 +8,8 @@ export type Establishment = {
   post_code: number;
   city: string;
   description?: string;
-  category: string | string[]; // Type specific categories
-  offer: string | string[]; // Type specific
+  category: string[]; // Type specific categories
+  offer: string[]; // Type specific
   email?: string;
   phone?: string;
   website?: string;

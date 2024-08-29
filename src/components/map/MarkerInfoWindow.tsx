@@ -16,8 +16,12 @@ const MarkerInfoWindow: React.FC<MarkerInfoWindowProps> = ({ handleClose, positi
             position={position}
         >
             <div>
-                <p>{info.name}</p>
+                <h6>{info.name}</h6>
+                <span>{info.address}</span>
+                <hr className="mt-2 mb-2" />
+                <p className="mb-1">{info.category.join(", ").toUpperCase()}</p>
             </div>
+
         </InfoWindow>
     )
 }
