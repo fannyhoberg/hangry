@@ -9,6 +9,7 @@ import useAddEstablishment from "../hooks/useAddEstablishment";
 import { storage } from "../services/firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
+
 const AddEstablishmentPage = () => {
     const {
         getValues,
@@ -21,30 +22,43 @@ const AddEstablishmentPage = () => {
 
     // validate address to ensure it is possible to geocode!
 
-    const uploadPhotos = (photoFiles: FileList) => {
+    const uploadPhotos = async (photoFiles: FileList) => {
         console.log(photoFiles)
         const photos = [...photoFiles];
-        photos.map(photo => {
-            const fileRef = ref(storage, "test-photos/" + photo.name);
 
-            const uploadTask = uploadBytesResumable(fileRef, photo);
+        const uploadPhotosPromises = photos.map(photo => {
+            return new Promise<string>((resolve, reject) => {
 
-            uploadTask.on("state_changed", (snapshot) => {
-                console.log(snapshot.bytesTransferred)
-            }, (err) => {
-                console.error(err.message)
-            }, async () => {
-                const photoUrl = await getDownloadURL(fileRef);
+                const fileRef = ref(storage, "test-photos/" + photo.name);
 
-                console.log("Photo URL is: ", photoUrl);
+                const uploadTask = uploadBytesResumable(fileRef, photo);
+
+                uploadTask.on("state_changed", (snapshot) => {
+                    console.log(snapshot.bytesTransferred)
+                }, (err) => {
+                    console.error(err.message)
+                    reject(err)
+                }, async () => {
+                    const photoUrl = await getDownloadURL(fileRef);
+                    console.log("Photo URL is: ", photoUrl);
+                    resolve(photoUrl)
+                })
             })
         })
+        const photoUrls = await Promise.all(uploadPhotosPromises)
+        return photoUrls;
     }
 
     const onFormSubmit: SubmitHandler<EstablishmentFormData> = async (data) => {
         const { photos, ...documentData } = data;
 
         try {
+
+            if (photos && photos.length > 0) {
+                const photoUrls = await uploadPhotos(photos);
+                documentData.photoUrls = photoUrls;
+            }
+
             await addEstablishment(documentData);
 
             reset();
@@ -54,11 +68,6 @@ const AddEstablishmentPage = () => {
             console.log(error);
         }
 
-        // get new establishment ID
-        // if data.photos --> upload photoFiles to storage with establishment ID 
-        if (photos && photos.length) {
-            uploadPhotos(photos)
-        }
     };
 
     return (

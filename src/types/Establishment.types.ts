@@ -15,6 +15,7 @@ export type Establishment = {
   website?: string;
   facebook?: string;
   instagram?: string;
+  photoUrls?: string[];
 };
 
 export type PositionCoords = {
