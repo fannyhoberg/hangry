@@ -1,4 +1,4 @@
-import { EstablishmentFormData } from "../types/Establishment.types";
+import { EstablishmentTextData } from "../types/Establishment.types";
 import { getGeopoint } from "../services/geocodingAPI";
 import { GeoPoint } from "firebase/firestore";
 import { addEstablishmentDoc } from "../services/establishments";
@@ -6,7 +6,7 @@ import { addEstablishmentDoc } from "../services/establishments";
 const useAddEstablishment = () => {
   // use when updating as well :)
 
-  const addEstablishment = async (data: EstablishmentFormData) => {
+  const addEstablishment = async (data: EstablishmentTextData) => {
     // Get geopoint from address
     const payload = await getGeopoint(data.address);
 

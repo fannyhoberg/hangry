@@ -15,7 +15,6 @@ export type Establishment = {
   website?: string;
   facebook?: string;
   instagram?: string;
-  // photos?: FileList;  // Or should I save only the photo Url ?? in DB and have photoFiles separate?
 };
 
 export type PositionCoords = {
@@ -25,4 +24,8 @@ export type PositionCoords = {
 
 export type NewEstablishment = Omit<Establishment, "_id">;
 
-export type EstablishmentFormData = Omit<NewEstablishment, "geopoint">;
+export type EstablishmentTextData = Omit<NewEstablishment, "geopoint">;
+
+export interface EstablishmentFormData extends EstablishmentTextData {
+  photos: FileList;
+}

@@ -6,26 +6,58 @@ import InputGroup from "react-bootstrap/InputGroup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { EstablishmentFormData } from "../types/Establishment.types";
 import useAddEstablishment from "../hooks/useAddEstablishment";
+import { storage } from "../services/firebase";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 const AddEstablishmentPage = () => {
     const {
         getValues,
         handleSubmit,
         register,
+        reset,
         formState: { errors },
     } = useForm<EstablishmentFormData>();
     const { addEstablishment } = useAddEstablishment();
 
     // validate address to ensure it is possible to geocode!
 
+    const uploadPhotos = (photoFiles: FileList) => {
+        console.log(photoFiles)
+        const photos = [...photoFiles];
+        photos.map(photo => {
+            const fileRef = ref(storage, "test-photos/" + photo.name);
+
+            const uploadTask = uploadBytesResumable(fileRef, photo);
+
+            uploadTask.on("state_changed", (snapshot) => {
+                console.log(snapshot.bytesTransferred)
+            }, (err) => {
+                console.error(err.message)
+            }, async () => {
+                const photoUrl = await getDownloadURL(fileRef);
+
+                console.log("Photo URL is: ", photoUrl);
+            })
+        })
+    }
+
     const onFormSubmit: SubmitHandler<EstablishmentFormData> = async (data) => {
-        // if data.photos --> upload photoFiles to storage
+        const { photos, ...documentData } = data;
 
         try {
-            addEstablishment(data);
+            await addEstablishment(documentData);
+
+            reset();
+
         } catch (error) {
             // HANDLE ERROR BETTER
             console.log(error);
+        }
+
+        // get new establishment ID
+        // if data.photos --> upload photoFiles to storage with establishment ID 
+        if (photos && photos.length) {
+            uploadPhotos(photos)
         }
     };
 
@@ -218,7 +250,8 @@ const AddEstablishmentPage = () => {
                             <Form.Control
                                 accept="image/gif,image/jpeg,image/png,image/webp"
                                 type="file"
-                            // {...register("photos")}
+                                {...register("photos")}
+                                multiple
                             />
                         </Form.Group>
 
