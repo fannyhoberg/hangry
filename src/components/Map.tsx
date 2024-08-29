@@ -1,15 +1,16 @@
-import { GoogleMap, InfoWindow, Marker } from "@react-google-maps/api";
+import { GoogleMap, Marker } from "@react-google-maps/api";
 import useGetEstablishments from "../hooks/useGetEstablishments";
 import useGetUserLocation from "../hooks/useGetUserLocation";
 import { useState } from "react";
-import { Establishment } from "../types/Establishment.types";
+import { Establishment, PositionCoords } from "../types/Establishment.types";
+import MarkerInfoWindow from "./map/MarkerInfoWindow";
 
 const containerStyle = {
     width: "100%",
     height: "100%",
 };
 
-const defaultCenter = {
+const defaultCenter: PositionCoords = {
     lat: 55.6049635786228,
     lng: 13.001277692558267,
 }
@@ -18,22 +19,19 @@ const Map = () => {
     const { data: establishments, loading } = useGetEstablishments();
     const { userLocation, isLoading } = useGetUserLocation();
     const [showInfoWindow, setShowInfoWindow] = useState(false);
-    const [infoWindowPosition, setInfoWindowPosition] = useState<{ lat: number, lng: number } | null>(null);
+    const [infoWindowPosition, setInfoWindowPosition] = useState<PositionCoords | null>(null);
     const [info, setInfo] = useState<Establishment | null>(null);
-
-    console.log(userLocation)
 
     const center = userLocation
         ? { lat: userLocation.coords.latitude, lng: userLocation.coords.longitude }
         : defaultCenter;
-
 
     const handleClose = () => {
         setShowInfoWindow(false);
         setInfoWindowPosition(null);
     }
 
-    const handleMarkerClick = (position: { lat: number, lng: number }, establishment: Establishment) => {
+    const handleMarkerClick = (position: PositionCoords, establishment: Establishment) => {
         setInfo(establishment)
         setShowInfoWindow(true);
         setInfoWindowPosition(position);
@@ -49,14 +47,7 @@ const Map = () => {
                     {loading && console.log("loading...")}
 
                     {showInfoWindow && infoWindowPosition && info &&
-                        <InfoWindow
-                            onCloseClick={handleClose}
-                            position={infoWindowPosition}
-                        >
-                            <div>
-                                <p>{info.name}</p>
-                            </div>
-                        </InfoWindow>
+                        <MarkerInfoWindow handleClose={handleClose} position={infoWindowPosition} info={info} />
                     }
 
                     {userLocation &&
@@ -69,15 +60,11 @@ const Map = () => {
 
                     {establishments &&
                         establishments.map((establishment) => {
-                            const position = {
+                            const position: PositionCoords = {
                                 lat: establishment.geopoint.latitude,
                                 lng: establishment.geopoint.longitude,
                             }
 
-                            console.log("Marker position:", {
-                                lat: establishment.geopoint.latitude,
-                                lng: establishment.geopoint.longitude,
-                            });
                             return (
                                 <Marker
                                     onClick={() => handleMarkerClick(position, establishment)}
