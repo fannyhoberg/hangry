@@ -1,6 +1,8 @@
-import { GoogleMap, Marker } from "@react-google-maps/api";
+import { GoogleMap, InfoWindow, Marker } from "@react-google-maps/api";
 import useGetEstablishments from "../hooks/useGetEstablishments";
 import useGetUserLocation from "../hooks/useGetUserLocation";
+import { useState } from "react";
+import { Establishment } from "../types/Establishment.types";
 
 const containerStyle = {
     width: "100%",
@@ -15,12 +17,27 @@ const defaultCenter = {
 const Map = () => {
     const { data: establishments, loading } = useGetEstablishments();
     const { userLocation, isLoading } = useGetUserLocation();
+    const [showInfoWindow, setShowInfoWindow] = useState(false);
+    const [infoWindowPosition, setInfoWindowPosition] = useState<{ lat: number, lng: number } | null>(null);
+    const [info, setInfo] = useState<Establishment | null>(null);
 
     console.log(userLocation)
 
     const center = userLocation
         ? { lat: userLocation.coords.latitude, lng: userLocation.coords.longitude }
         : defaultCenter;
+
+
+    const handleClose = () => {
+        setShowInfoWindow(false);
+        setInfoWindowPosition(null);
+    }
+
+    const handleMarkerClick = (position: { lat: number, lng: number }, establishment: Establishment) => {
+        setInfo(establishment)
+        setShowInfoWindow(true);
+        setInfoWindowPosition(position);
+    }
 
     if (isLoading) return <div>Loading your location...</div>;
 
@@ -31,6 +48,17 @@ const Map = () => {
                 <>
                     {loading && console.log("loading...")}
 
+                    {showInfoWindow && infoWindowPosition && info &&
+                        <InfoWindow
+                            onCloseClick={handleClose}
+                            position={infoWindowPosition}
+                        >
+                            <div>
+                                <p>{info.name}</p>
+                            </div>
+                        </InfoWindow>
+                    }
+
                     {userLocation &&
                         // Marker for user position - style differently
                         <Marker
@@ -40,18 +68,21 @@ const Map = () => {
                     }
 
                     {establishments &&
-                        establishments.map((marker) => {
+                        establishments.map((establishment) => {
+                            const position = {
+                                lat: establishment.geopoint.latitude,
+                                lng: establishment.geopoint.longitude,
+                            }
+
                             console.log("Marker position:", {
-                                lat: marker.geopoint.latitude,
-                                lng: marker.geopoint.longitude,
+                                lat: establishment.geopoint.latitude,
+                                lng: establishment.geopoint.longitude,
                             });
                             return (
                                 <Marker
-                                    key={marker._id}
-                                    position={{
-                                        lat: marker.geopoint.latitude,
-                                        lng: marker.geopoint.longitude,
-                                    }}
+                                    onClick={() => handleMarkerClick(position, establishment)}
+                                    key={establishment._id}
+                                    position={position}
                                 />
                             );
                         })}
