@@ -4,10 +4,11 @@ import { EstablishmentFormData } from "../types/Establishment.types";
 import useAddEstablishment from "../hooks/useAddEstablishment";
 import EstablishmentForm from "../components/EstablishmentForm";
 import useAddFiles from "../hooks/useAddFiles";
+import useAuth from "../hooks/useAuth";
 
 
 const AddEstablishmentPage = () => {
-
+    const { currentUser } = useAuth()
     const { addEstablishment, error: establishmentError, loading: establishmentLoading } = useAddEstablishment();
     const { uploadPhotos, error: fileUploadError, loading: fileUploadLoading } = useAddFiles()
 
@@ -24,28 +25,27 @@ const AddEstablishmentPage = () => {
         await addEstablishment(documentData);
     };
 
-    if (establishmentError) {
-        return <div>{establishmentError}</div>
-    }
-
-    if (fileUploadError) {
-        return <div>{fileUploadError}</div>
-    }
-
-    if (establishmentLoading || fileUploadLoading) {
-        console.log("HALLÅ")
-        return <div>Loading...</div>
-    }
-
     return (
         <Container className="py-3 center-y">
-            <Card className="mb-3 mt-5">
-                <Card.Body>
-                    <Card.Title className="mb-3">Add Establishment</Card.Title>
+            {establishmentError && (
+                <div>{establishmentError}</div>
+            )}
+            {fileUploadError && (
+                <div>{fileUploadError}</div>
+            )}
+            {establishmentLoading || fileUploadLoading && (
+                <div>Loading...</div>
+            )}
 
-                    <EstablishmentForm handleFormSubmit={handleFormSubmit} />
-                </Card.Body>
-            </Card>
+            {currentUser &&
+                <Card className="mb-3 mt-5">
+                    <Card.Body>
+                        <Card.Title className="mb-3">Add Establishment</Card.Title>
+
+                        <EstablishmentForm handleFormSubmit={handleFormSubmit} admin={currentUser} />
+                    </Card.Body>
+                </Card>
+            }
         </Container>
     );
 };
