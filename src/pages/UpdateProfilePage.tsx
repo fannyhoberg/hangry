@@ -11,6 +11,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { UpdateProfileType } from "../types/User.types";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../services/firebase";
+import useAddFiles from "../hooks/useAddFiles";
 
 const UpdateProfilePage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,6 +30,8 @@ const UpdateProfilePage = () => {
     setPassword,
     setPhotoUrl,
   } = useAuth();
+  const { error, loading, uploadPhotos } = useAddFiles(); // Destructure from the custom hook
+
   const {
     handleSubmit,
     register,
@@ -50,23 +53,20 @@ const UpdateProfilePage = () => {
       setIsError(false);
 
       if (data.photos.length) {
-        const photo = data.photos[0];
-
-        const fileRef = ref(
-          storage,
-          `photos/${currentUser?.uid}/${photo.name}`
-        );
+        const photoFile = data.photos;
+        const folder = `profile-pictures/${currentUser?.uid}`;
 
         try {
-          const uploadRes = await uploadBytes(fileRef, photo);
+          const photoUrls = await uploadPhotos(photoFile, folder);
 
-          const photoURL = await getDownloadURL(uploadRes.ref);
-
-          console.log("Photo URL", photoURL);
-
-          await setPhotoUrl(photoURL);
+          if (photoUrls && photoUrls.length > 0) {
+            const photoURL = photoUrls[0];
+            await setPhotoUrl(photoURL);
+          }
         } catch (err) {
-          console.error("Could not upload photo", err);
+          console.error("Could not upload photos", err);
+          setIsError(true);
+          return;
         }
       }
 
