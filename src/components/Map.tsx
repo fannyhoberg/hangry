@@ -43,9 +43,9 @@ const Map = () => {
     Eslöv: { lat: 55.83900838618268, lng: 13.30492141526424 },
   };
 
-  const center = userLocation
-    ? { lat: userLocation.coords.latitude, lng: userLocation.coords.longitude }
-    : defaultCenter;
+  // const center = userLocation
+  //   ? { lat: userLocation.coords.latitude, lng: userLocation.coords.longitude }
+  //   : defaultCenter;
 
   const handleClose = () => {
     setShowInfoWindow(false);
@@ -78,6 +78,10 @@ const Map = () => {
     }
   }, [userLocation]);
 
+  if (loading) {
+    console.log("loading while fetching data");
+  }
+
   if (isLoading) return <div>Loading your location...</div>;
 
   return (
@@ -104,7 +108,7 @@ const Map = () => {
       <div className="map-wrapper">
         <GoogleMap
           mapContainerStyle={containerStyle}
-          center={centerPosition ? centerPosition : center}
+          center={centerPosition ? centerPosition : defaultCenter}
           zoom={14}
         >
           <>
