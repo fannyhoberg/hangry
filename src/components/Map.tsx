@@ -1,7 +1,7 @@
 import { GoogleMap, Marker } from "@react-google-maps/api";
 import useGetEstablishments from "../hooks/useGetEstablishments";
 import useGetUserLocation from "../hooks/useGetUserLocation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Establishment, PositionCoords } from "../types/Establishment.types";
 import MarkerInfoWindow from "./map/MarkerInfoWindow";
 
@@ -16,7 +16,7 @@ const defaultCenter: PositionCoords = {
 };
 
 const Map = () => {
-  const { data: establishments, loading } = useGetEstablishments();
+  const { data: establishments, loading: isEstablishmentsLoading } = useGetEstablishments();
   const { userLocation, isLoading } = useGetUserLocation();
   const [showInfoWindow, setShowInfoWindow] = useState(false);
   const [infoWindowPosition, setInfoWindowPosition] = useState<PositionCoords | null>(null);
@@ -52,6 +52,25 @@ const Map = () => {
     setCenterPosition(newCenter);
   };
 
+  const renderMarkers = useCallback(() => {
+    if (establishments) {
+      return establishments.map((establishment) => {
+        const position: PositionCoords = {
+          lat: establishment.geopoint.latitude,
+          lng: establishment.geopoint.longitude,
+        };
+
+        return (
+          <Marker
+            onClick={() => handleMarkerClick(position, establishment)}
+            key={establishment._id}
+            position={position}
+          />
+        );
+      });
+    }
+  }, [establishments]);
+
   useEffect(() => {
     if (userLocation) {
       setCenterPosition({
@@ -61,10 +80,10 @@ const Map = () => {
     }
   }, [userLocation]);
 
-  if (loading || !centerPosition) {
+  if (isEstablishmentsLoading || isLoading || !centerPosition) {
     console.log("Loading data and location...");
     return <div>Loading map...</div>;
-  } else if (!loading && centerPosition && !isLoading) {
+  } else if (!isEstablishmentsLoading && !isLoading && establishments) {
     console.log("Data and location aquired, map rendering...");
     return (
       <>
@@ -87,11 +106,11 @@ const Map = () => {
         <div className="map-wrapper">
           <GoogleMap
             mapContainerStyle={containerStyle}
-            center={centerPosition ? centerPosition : defaultCenter}
+            center={userLocation ? centerPosition : defaultCenter}
             zoom={14}
           >
             <>
-              {loading && console.log("Loading...")}
+              {/* {isEstablishmentsLoading && console.log("Loading...")} */}
 
               {showInfoWindow && infoWindowPosition && info && (
                 <MarkerInfoWindow
@@ -112,7 +131,8 @@ const Map = () => {
                 />
               )}
 
-              {establishments &&
+              {renderMarkers()}
+              {/* {establishments &&
                 establishments.map((establishment) => {
                   const position: PositionCoords = {
                     lat: establishment.geopoint.latitude,
@@ -126,9 +146,17 @@ const Map = () => {
                       position={position}
                     />
                   );
-                })}
+                })} */}
             </>
           </GoogleMap>
+
+          <div>
+            <ul>
+              {establishments.map((establishment) => (
+                <li>{establishment.name}</li>
+              ))}
+            </ul>
+          </div>
         </div>
       </>
     );
