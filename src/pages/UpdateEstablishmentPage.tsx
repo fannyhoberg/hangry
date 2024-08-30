@@ -43,14 +43,15 @@ const UpdateEstablishmentPage = () => {
                 <div>Loading...</div>
             )}
 
-            {establishment && <div>{establishment.name}</div>}
+            {/* IMAGE GALLERY WITH ESTABLISHMENT'S IMAGES
+                AND FUNCTIONALITY TO DELETE IMAGES */}
 
-            {currentUser &&
+            {currentUser && establishment &&
                 <Card className="mb-3 mt-5">
                     <Card.Body>
                         <Card.Title className="mb-3">Add Establishment</Card.Title>
 
-                        <EstablishmentForm handleFormSubmit={handleFormSubmit} admin={currentUser} />
+                        <EstablishmentForm handleFormSubmit={handleFormSubmit} admin={currentUser} initialValues={establishment} />
                     </Card.Body>
                 </Card>
             }
