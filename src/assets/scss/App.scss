@@ -7,3 +7,11 @@
   flex-direction: column;
   min-height: 100vh;
 }
+
+.navbar-nav {
+  .dropdown-menu {
+    left: auto;
+    right: 0;
+    min-width: 150px;
+  }
+}
