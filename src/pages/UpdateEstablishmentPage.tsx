@@ -5,15 +5,15 @@ import EstablishmentForm from "../components/EstablishmentForm";
 import useAddFiles from "../hooks/useAddFiles";
 import useAuth from "../hooks/useAuth";
 import { useParams } from "react-router-dom";
+import useGetEstablishMentByID from "../hooks/useGetEstablishMentByID";
 
 
 const UpdateEstablishmentPage = () => {
     const { id } = useParams()
     const { currentUser } = useAuth()
     const { uploadPhotos, error: fileUploadError, loading: fileUploadLoading } = useAddFiles()
+    const { document: establishment, error: establishmentError, loading: loadingEstablishment } = useGetEstablishMentByID(id);
 
-    // TO DO
-    // Get establishment based on ID,
     // Send info as initialvalues to establishment form
     // Update functionality
 
@@ -31,12 +31,19 @@ const UpdateEstablishmentPage = () => {
     return (
         <Container className="py-3 center-y">
 
+            {establishmentError && (
+                <div>{establishmentError}</div>
+            )}
+
             {fileUploadError && (
                 <div>{fileUploadError}</div>
             )}
-            {fileUploadLoading && (
+
+            {fileUploadLoading || loadingEstablishment && (
                 <div>Loading...</div>
             )}
+
+            {establishment && <div>{establishment.name}</div>}
 
             {currentUser &&
                 <Card className="mb-3 mt-5">

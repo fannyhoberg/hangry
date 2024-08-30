@@ -43,9 +43,14 @@ const Navigation = () => {
               </NavDropdown>
             </>
           ) : (
-            <Nav.Link as={NavLink} end to="/login">
-              Login
-            </Nav.Link>
+            <>
+              <Nav.Link as={NavLink} end to="/suggestions">
+                Add Suggestions
+              </Nav.Link>
+              <Nav.Link as={NavLink} end to="/login">
+                Login
+              </Nav.Link>
+            </>
           )}
         </Nav>
       </Container>
