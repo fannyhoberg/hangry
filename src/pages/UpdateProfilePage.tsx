@@ -110,6 +110,8 @@ const UpdateProfilePage = () => {
                   <Image
                     src={userPhotoUrl || "https://via.placeholder.com/200"}
                     fluid
+                    width={200}
+                    height={200}
                     roundedCircle
                   />
                 </div>
