@@ -1,4 +1,4 @@
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import { GoogleMap, Marker } from "@react-google-maps/api";
 import useGetEstablishments from "../hooks/useGetEstablishments";
 import useGetUserLocation from "../hooks/useGetUserLocation";
 import { useEffect, useState } from "react";
@@ -81,39 +81,34 @@ const Map = () => {
   if (isLoading) return <div>Loading your location...</div>;
 
   return (
-    <div className="map-wrapper">
-      <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-        <div
-          style={{
-            position: "absolute",
-            top: "10px",
-            left: "10px",
-            zIndex: 1,
-          }}
+    <>
+      <div
+        style={{
+          position: "relative",
+          top: "10px",
+          left: "10px",
+          zIndex: 1,
+        }}
+      >
+        <select
+          onChange={handleLocationChange}
+          style={{ padding: "8px", fontSize: "16px" }}
         >
-          <select
-            onChange={handleLocationChange}
-            style={{ padding: "8px", fontSize: "16px" }}
-          >
-            <option value="Min_position">Min position</option>
-            <option value="Lund">Lund</option>
-            <option value="Malmö">Malmö</option>
-            <option value="Eslöv">Eslöv</option>
-          </select>
-        </div>
+          <option value="Min_position">Min position</option>
+          <option value="Lund">Lund</option>
+          <option value="Malmö">Malmö</option>
+          <option value="Eslöv">Eslöv</option>
+        </select>
+      </div>
 
+      <div className="map-wrapper">
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={centerPosition ? centerPosition : center}
           zoom={14}
         >
           <>
-            {loading && console.log("loading...")}
-            {/* Check if data is loaded */}
-            {loading && console.log("Loading establishments...")}
-            {!loading &&
-              establishments &&
-              console.log("Establishments loaded:", establishments)}
+            {loading && console.log("Loading...")}
 
             {showInfoWindow && infoWindowPosition && info && (
               <MarkerInfoWindow
@@ -151,8 +146,8 @@ const Map = () => {
               })}
           </>
         </GoogleMap>
-      </LoadScript>
-    </div>
+      </div>
+    </>
   );
 };
 
