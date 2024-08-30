@@ -30,7 +30,7 @@ const useStreamDocument = <T>(
     });
 
     return unsubscribe;
-  }, []);
+  }, [colRef, docId]);
 
   return {
     document,
