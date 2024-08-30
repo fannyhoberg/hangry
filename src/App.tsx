@@ -8,6 +8,7 @@ import AddEstablishmentPage from "./pages/AddEstablishmentPage";
 import Navigation from "./components/Navigation";
 import { LoadScriptNext } from "@react-google-maps/api";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import UpdateProfilePage from "./pages/UpdateProfilePage";
 
 const google_api_key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -25,7 +26,11 @@ function App() {
 
           <Route element={<ProtectedRoutes />}>
             <Route path="/logout" element={<LogoutPage />} />
-            <Route path="/add-establishment" element={<AddEstablishmentPage />} />
+            <Route path="/update-profile" element={<UpdateProfilePage />} />
+            <Route
+              path="/add-establishment"
+              element={<AddEstablishmentPage />}
+            />
           </Route>
         </Routes>
       </LoadScriptNext>

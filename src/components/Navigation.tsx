@@ -21,6 +21,9 @@ const Navigation = () => {
                 <Nav.Link as={NavLink} end to="/add-establishment">
                   Add establishment
                 </Nav.Link>
+                <Nav.Link as={NavLink} end to="/update-profile">
+                  Update profile
+                </Nav.Link>
                 <Nav.Link as={NavLink} end to="/logout">
                   Logout
                 </Nav.Link>
