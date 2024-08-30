@@ -9,8 +9,6 @@ import Image from "react-bootstrap/Image";
 import Row from "react-bootstrap/Row";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { UpdateProfileType } from "../types/User.types";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { storage } from "../services/firebase";
 import useAddFiles from "../hooks/useAddFiles";
 
 const UpdateProfilePage = () => {
@@ -30,7 +28,7 @@ const UpdateProfilePage = () => {
     setPassword,
     setPhotoUrl,
   } = useAuth();
-  const { error, loading, uploadPhotos } = useAddFiles(); // Destructure from the custom hook
+  const { uploadPhotos } = useAddFiles();
 
   const {
     handleSubmit,
@@ -64,32 +62,26 @@ const UpdateProfilePage = () => {
             await setPhotoUrl(photoURL);
           }
         } catch (err) {
-          console.error("Could not upload photos", err);
           setIsError(true);
           return;
         }
       }
 
       if (data.name !== (userName ?? "")) {
-        console.log("Updating display name...");
         await setDisplayName(data.name);
       }
 
-      // Update email *ONLY* if it has changed
       if (data.email !== (userEmail ?? "")) {
-        console.log("Updating email...");
         await setEmail(data.email);
       }
 
-      // Update password *ONLY* if the user has provided a new password to set
       if (data.password) {
-        console.log("Updating password...");
         await setPassword(data.password);
       }
 
       reloadUser();
     } catch (err) {
-      console.error("Error thrown when updating user profile:", err);
+      console.error("Error when updating the profile:", err);
       setIsError(true);
     }
     setIsSubmitting(false);
