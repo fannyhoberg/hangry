@@ -1,7 +1,7 @@
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import useGetEstablishments from "../hooks/useGetEstablishments";
 import useGetUserLocation from "../hooks/useGetUserLocation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Establishment, PositionCoords } from "../types/Establishment.types";
 import MarkerInfoWindow from "./map/MarkerInfoWindow";
 
@@ -69,40 +69,51 @@ const Map = () => {
     setCenterPosition(newCenter);
   };
 
+  useEffect(() => {
+    if (userLocation) {
+      setCenterPosition({
+        lat: userLocation.coords.latitude,
+        lng: userLocation.coords.longitude,
+      });
+    }
+  }, [userLocation]);
+
   if (isLoading) return <div>Loading your location...</div>;
 
   return (
     <div className="map-wrapper">
       <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-        {/* Dropdown to select a city */}
+        <div
+          style={{
+            position: "absolute",
+            top: "10px",
+            left: "10px",
+            zIndex: 1,
+          }}
+        >
+          <select
+            onChange={handleLocationChange}
+            style={{ padding: "8px", fontSize: "16px" }}
+          >
+            <option value="Min_position">Min position</option>
+            <option value="Lund">Lund</option>
+            <option value="Malmö">Malmö</option>
+            <option value="Eslöv">Eslöv</option>
+          </select>
+        </div>
 
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={centerPosition ? centerPosition : center}
           zoom={14}
         >
-          {/* Child components, such as markers, info windows, etc. */}
-          <div
-            style={{
-              position: "absolute",
-              top: "10px",
-              left: "10px",
-              zIndex: 1,
-            }}
-          >
-            <select
-              onChange={handleLocationChange}
-              style={{ padding: "8px", fontSize: "16px" }}
-            >
-              <option value="Min_position">Min position</option>
-              <option value="Lund">Lund</option>
-              <option value="Malmö">Malmö</option>
-              <option value="Eslöv">Eslöv</option>
-            </select>
-          </div>
-
           <>
             {loading && console.log("loading...")}
+            {/* Check if data is loaded */}
+            {loading && console.log("Loading establishments...")}
+            {!loading &&
+              establishments &&
+              console.log("Establishments loaded:", establishments)}
 
             {showInfoWindow && infoWindowPosition && info && (
               <MarkerInfoWindow
