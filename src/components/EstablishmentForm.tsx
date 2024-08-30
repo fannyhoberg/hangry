@@ -8,16 +8,21 @@ import { User } from "firebase/auth";
 interface EstablishmentFormProps {
     handleFormSubmit: (data: EstablishmentFormData) => Promise<void>;
     admin?: User;
+    initialValues?: Partial<EstablishmentFormData>;
 }
 
-const EstablishmentForm: React.FC<EstablishmentFormProps> = ({ handleFormSubmit, admin }) => {
+const EstablishmentForm: React.FC<EstablishmentFormProps> = ({ handleFormSubmit, admin, initialValues }) => {
     const {
         getValues,
         handleSubmit,
         register,
         reset,
         formState: { errors },
-    } = useForm<EstablishmentFormData>();
+    } = useForm<EstablishmentFormData>({
+        defaultValues: {
+            ...initialValues
+        }
+    });
 
     const onFormSubmit: SubmitHandler<EstablishmentFormData> = (data) => {
         handleFormSubmit(data);
