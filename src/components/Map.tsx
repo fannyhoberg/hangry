@@ -21,14 +21,7 @@ const Map = () => {
   const [showInfoWindow, setShowInfoWindow] = useState(false);
   const [infoWindowPosition, setInfoWindowPosition] = useState<PositionCoords | null>(null);
   const [info, setInfo] = useState<Establishment | null>(null);
-  const [centerPosition, setCenterPosition] = useState<PositionCoords>(
-    userLocation
-      ? {
-          lat: userLocation.coords.latitude,
-          lng: userLocation.coords.longitude,
-        }
-      : defaultCenter
-  );
+  const [centerPosition, setCenterPosition] = useState<PositionCoords>(defaultCenter);
 
   const locations = {
     Min_position: userLocation
@@ -41,10 +34,6 @@ const Map = () => {
     Malmö: { lat: 55.6052931, lng: 13.0001566 },
     Eslöv: { lat: 55.83900838618268, lng: 13.30492141526424 },
   };
-
-  const center = userLocation
-    ? { lat: userLocation.coords.latitude, lng: userLocation.coords.longitude }
-    : defaultCenter;
 
   const handleClose = () => {
     setShowInfoWindow(false);
@@ -72,74 +61,78 @@ const Map = () => {
     }
   }, [userLocation]);
 
-  if (isLoading) return <div>Loading your location...</div>;
-
-  return (
-    <>
-      <div
-        style={{
-          position: "relative",
-          top: "10px",
-          left: "10px",
-          zIndex: 1,
-        }}
-      >
-        <select onChange={handleLocationChange} style={{ padding: "8px", fontSize: "16px" }}>
-          <option value="Min_position">Min position</option>
-          <option value="Lund">Lund</option>
-          <option value="Malmö">Malmö</option>
-          <option value="Eslöv">Eslöv</option>
-        </select>
-      </div>
-
-      <div className="map-wrapper">
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={centerPosition ? centerPosition : center}
-          zoom={14}
+  if (loading || !centerPosition) {
+    console.log("Loading data and location...");
+    return <div>Loading map...</div>;
+  } else if (!loading && centerPosition && !isLoading) {
+    console.log("Data and location aquired, map rendering...");
+    return (
+      <>
+        <div
+          style={{
+            position: "relative",
+            top: "10px",
+            left: "10px",
+            zIndex: 1,
+          }}
         >
-          <>
-            {loading && console.log("Loading...")}
+          <select onChange={handleLocationChange} style={{ padding: "8px", fontSize: "16px" }}>
+            <option value="Min_position">Min position</option>
+            <option value="Lund">Lund</option>
+            <option value="Malmö">Malmö</option>
+            <option value="Eslöv">Eslöv</option>
+          </select>
+        </div>
 
-            {showInfoWindow && infoWindowPosition && info && (
-              <MarkerInfoWindow
-                handleClose={handleClose}
-                position={infoWindowPosition}
-                info={info}
-              />
-            )}
+        <div className="map-wrapper">
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={centerPosition ? centerPosition : defaultCenter}
+            zoom={14}
+          >
+            <>
+              {loading && console.log("Loading...")}
 
-            {userLocation && (
-              // Marker for user position - style differently
-              <Marker
-                // key={userLocation.timestamp}
-                position={{
-                  lat: userLocation.coords.latitude,
-                  lng: userLocation.coords.longitude,
-                }}
-              />
-            )}
+              {showInfoWindow && infoWindowPosition && info && (
+                <MarkerInfoWindow
+                  handleClose={handleClose}
+                  position={infoWindowPosition}
+                  info={info}
+                />
+              )}
 
-            {establishments &&
-              establishments.map((establishment) => {
-                const position: PositionCoords = {
-                  lat: establishment.geopoint.latitude,
-                  lng: establishment.geopoint.longitude,
-                };
+              {userLocation && (
+                // Marker for user position - style differently
+                <Marker
+                  // key={userLocation.timestamp}
+                  position={{
+                    lat: userLocation.coords.latitude,
+                    lng: userLocation.coords.longitude,
+                  }}
+                />
+              )}
 
-                return (
-                  <Marker
-                    onClick={() => handleMarkerClick(position, establishment)}
-                    key={establishment._id}
-                    position={position}
-                  />
-                );
-              })}
-          </>
-        </GoogleMap>
-      </div>
-    </>
-  );
+              {establishments &&
+                establishments.map((establishment) => {
+                  const position: PositionCoords = {
+                    lat: establishment.geopoint.latitude,
+                    lng: establishment.geopoint.longitude,
+                  };
+
+                  return (
+                    <Marker
+                      onClick={() => handleMarkerClick(position, establishment)}
+                      key={establishment._id}
+                      position={position}
+                    />
+                  );
+                })}
+            </>
+          </GoogleMap>
+        </div>
+      </>
+    );
+  }
 };
 
 export default Map;
