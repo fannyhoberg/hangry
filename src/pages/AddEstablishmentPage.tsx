@@ -2,62 +2,40 @@ import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import { EstablishmentFormData } from "../types/Establishment.types";
 import useAddEstablishment from "../hooks/useAddEstablishment";
-import { storage } from "../services/firebase";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import EstablishmentForm from "../components/EstablishmentForm";
+import useAddFiles from "../hooks/useAddFiles";
 
 
 const AddEstablishmentPage = () => {
 
-    const { addEstablishment } = useAddEstablishment();
+    const { addEstablishment, error: establishmentError, loading: establishmentLoading } = useAddEstablishment();
+    const { uploadPhotos, error: fileUploadError, loading: fileUploadLoading } = useAddFiles()
 
     // validate address to ensure it is possible to geocode!
-
-    const uploadPhotos = async (photoFiles: FileList) => {
-        console.log(photoFiles)
-        const photos = [...photoFiles];
-
-        const uploadPhotosPromises = photos.map(photo => {
-            return new Promise<string>((resolve, reject) => {
-
-                const fileRef = ref(storage, "test-photos/" + photo.name);
-
-                const uploadTask = uploadBytesResumable(fileRef, photo);
-
-                uploadTask.on("state_changed", (snapshot) => {
-                    console.log(snapshot.bytesTransferred)
-                }, (err) => {
-                    console.error(err.message)
-                    reject(err)
-                }, async () => {
-                    const photoUrl = await getDownloadURL(fileRef);
-                    console.log("Photo URL is: ", photoUrl);
-                    resolve(photoUrl)
-                })
-            })
-        })
-        const photoUrls = await Promise.all(uploadPhotosPromises)
-        return photoUrls;
-    }
 
     const handleFormSubmit = async (data: EstablishmentFormData) => {
         const { photos, ...documentData } = data;
 
-        try {
-
-            if (photos && photos.length > 0) {
-                const photoUrls = await uploadPhotos(photos);
-                documentData.photoUrls = photoUrls;
-            }
-
-            await addEstablishment(documentData);
-
-        } catch (error) {
-            // HANDLE ERROR BETTER
-            console.log(error);
+        if (photos && photos.length > 0) {
+            const photoUrls = await uploadPhotos(photos, "test-photos");
+            documentData.photoUrls = photoUrls;
         }
 
+        await addEstablishment(documentData);
     };
+
+    if (establishmentError) {
+        return <div>{establishmentError}</div>
+    }
+
+    if (fileUploadError) {
+        return <div>{fileUploadError}</div>
+    }
+
+    if (establishmentLoading || fileUploadLoading) {
+        console.log("HALLÅ")
+        return <div>Loading...</div>
+    }
 
     return (
         <Container className="py-3 center-y">

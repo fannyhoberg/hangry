@@ -1,9 +1,12 @@
 import { EstablishmentTextData } from "../types/Establishment.types";
 import { getGeopoint } from "../services/geocodingAPI";
 import { GeoPoint } from "firebase/firestore";
-import { addEstablishmentDoc } from "../services/establishments";
+// import { addEstablishmentDoc } from "../services/establishments";
+import { useAddDocument } from "./useAddDocument";
+import { newEstablishmentCol } from "../services/firebase";
 
 const useAddEstablishment = () => {
+  const { addDocument, error, loading } = useAddDocument();
   // use when updating as well :)
 
   const addEstablishment = async (data: EstablishmentTextData) => {
@@ -20,14 +23,9 @@ const useAddEstablishment = () => {
     };
 
     // Add to DB incl geopoint
-    try {
-      addEstablishmentDoc(newEstablishmentObj);
-    } catch (error) {
-      // HANDLE ERROR BETTER
-      console.log(error);
-    }
+    addDocument(newEstablishmentCol, newEstablishmentObj);
   };
-  return { addEstablishment };
+  return { addEstablishment, error, loading };
 };
 
 export default useAddEstablishment;
