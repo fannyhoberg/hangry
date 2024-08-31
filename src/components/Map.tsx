@@ -25,6 +25,9 @@ const Map = () => {
   const [centerPosition, setCenterPosition] =
     useState<PositionCoords>(defaultCenter);
 
+  console.log("Establishments", establishments);
+  console.log("userLocation", userLocation);
+
   const myPositionIcon =
     "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
 
@@ -72,7 +75,7 @@ const Map = () => {
   }, [userLocation]);
 
   if (loading || !centerPosition) {
-    console.log("Loading data and location...");
+    console.log("Loading data and location....");
     return <div>Loading map...</div>;
   } else if (!loading && centerPosition && !isLoading) {
     console.log("Data and location aquired, map rendering...");
@@ -96,53 +99,64 @@ const Map = () => {
             <option value="Eslöv">Eslöv</option>
           </select>
         </div>
-
         <div className="map-wrapper">
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={centerPosition ? centerPosition : defaultCenter}
-            zoom={14}
-          >
-            <>
-              {loading && console.log("Loading...")}
+          {loading && console.log("Loading establishments....")}
 
-              {showInfoWindow && infoWindowPosition && info && (
-                <MarkerInfoWindow
-                  handleClose={handleClose}
-                  position={infoWindowPosition}
-                  info={info}
-                />
-              )}
+          {!loading && !isLoading && (
+            <GoogleMap
+              mapContainerStyle={containerStyle}
+              center={centerPosition ? centerPosition : defaultCenter}
+              zoom={14}
+            >
+              <>
+                {showInfoWindow && infoWindowPosition && info && (
+                  <MarkerInfoWindow
+                    handleClose={handleClose}
+                    position={infoWindowPosition}
+                    info={info}
+                  />
+                )}
 
-              {userLocation && (
-                // Marker for user position - style differently
-                <Marker
-                  // key={userLocation.timestamp}
-                  position={{
-                    lat: userLocation.coords.latitude,
-                    lng: userLocation.coords.longitude,
-                  }}
-                  icon={myPositionIcon}
-                />
-              )}
+                {userLocation && (
+                  // Marker for user position - style differently
+                  <Marker
+                    // key={userLocation.timestamp}
+                    position={{
+                      lat: userLocation.coords.latitude,
+                      lng: userLocation.coords.longitude,
+                    }}
+                    icon={myPositionIcon}
+                  />
+                )}
 
-              {establishments &&
-                establishments.map((establishment) => {
-                  const position: PositionCoords = {
-                    lat: establishment.geopoint.latitude,
-                    lng: establishment.geopoint.longitude,
-                  };
+                {establishments &&
+                  establishments.map((establishment) => {
+                    const position: PositionCoords = {
+                      lat: establishment.geopoint.latitude,
+                      lng: establishment.geopoint.longitude,
+                    };
 
-                  return (
-                    <Marker
-                      onClick={() => handleMarkerClick(position, establishment)}
-                      key={establishment._id}
-                      position={position}
-                    />
-                  );
-                })}
-            </>
-          </GoogleMap>
+                    return (
+                      <Marker
+                        onClick={() =>
+                          handleMarkerClick(position, establishment)
+                        }
+                        key={establishment._id}
+                        position={position}
+                      />
+                    );
+                  })}
+              </>
+            </GoogleMap>
+          )}
+        </div>
+        <div>
+          <ul>
+            {establishments &&
+              establishments.map((establishment) => (
+                <li key={establishment._id}>{establishment.name}</li>
+              ))}
+          </ul>
         </div>
       </>
     );
