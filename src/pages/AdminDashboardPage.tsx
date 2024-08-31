@@ -1,3 +1,5 @@
+import { Container } from "react-bootstrap";
+import CollapsibleSection from "../components/CollapseSection";
 import useGetEstablishments from "../hooks/useGetEstablishments";
 import useGetSuggestions from "../hooks/useGetSuggestions";
 
@@ -9,31 +11,32 @@ const AdminDashboardPage = () => {
 
   return (
     <>
-      <h1>Admin Dashboard</h1>
-      <h2>Establishments</h2>
+      <Container className="py-3 center-y">
+        <h1>Admin Dashboard</h1>
+
+        {establishments && !establishmentLoading && (
+          <CollapsibleSection
+            title="Establishments"
+            children={establishments}
+          ></CollapsibleSection>
+        )}
+
+        {suggestions && !suggestionsLoading && (
+          <CollapsibleSection
+            title="User Suggestions"
+            children={suggestions}
+          ></CollapsibleSection>
+        )}
+
+        {/* <h2>All Users</h2>
       <ul>
-        {establishments &&
-          !establishmentLoading &&
-          establishments.map((establishment) => {
-            return <li key={establishment._id}>{establishment.name}</li>;
-          })}
-      </ul>
-      <h2>User suggestions</h2>
-      <ul>
-        {suggestions &&
-          !suggestionsLoading &&
-          suggestions.map((suggestion) => {
-            return <li key={suggestion._id}>{suggestion.name}</li>;
-          })}
-      </ul>
-      {/* <h2>Admins</h2>
-      <ul>
-        {admins &&
-          !adminsLoading &&
-          admins.map((admin) => {
-            return <li key={admin._id}>{admin.name}</li>;
-          })}
+        {usersLoading ? (
+          <li>Loading users...</li>
+        ) : (
+          users.map((user) => <li key={user.uid}>{user.name || user.email}</li>)
+        )}
       </ul> */}
+      </Container>
     </>
   );
 };

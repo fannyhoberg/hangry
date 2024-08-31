@@ -9,7 +9,12 @@ import {
   updatePassword,
   updateProfile,
 } from "firebase/auth";
-import React, { PropsWithChildren, createContext, useEffect, useState } from "react";
+import React, {
+  PropsWithChildren,
+  createContext,
+  useEffect,
+  useState,
+} from "react";
 import { auth } from "../services/firebase";
 
 // Define the shape of the Auth context
