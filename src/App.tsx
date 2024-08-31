@@ -12,6 +12,7 @@ import UpdateProfilePage from "./pages/UpdateProfilePage";
 import { AddSuggestionsPage } from "./pages/AddSuggestionsPage";
 import UpdateEstablishmentPage from "./pages/UpdateEstablishmentPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
 
 const google_api_key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -32,6 +33,8 @@ function App() {
             <Route path="/logout" element={<LogoutPage />} />
             <Route path="/update-profile" element={<UpdateProfilePage />} />
             <Route path="/update/:id" element={<UpdateEstablishmentPage />} />
+            <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
+
             <Route
               path="/add-establishment"
               element={<AddEstablishmentPage />}
