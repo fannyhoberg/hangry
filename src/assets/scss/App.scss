@@ -1,9 +1,50 @@
 @import "Map.scss";
-
 @import "bootstrap/scss/bootstrap";
 
 #App {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+}
+
+.navbar-nav {
+  .dropdown-menu {
+    left: auto;
+    right: 0;
+    min-width: 150px;
+  }
+}
+
+// Collapse Section
+.collapsible-container {
+  margin: 10px 0;
+}
+
+.collapsible-header {
+  cursor: pointer;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  padding: 10px;
+  font-size: 16px;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.collapsible-icon {
+  margin-right: 10px;
+}
+
+.collapsible-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding: 0 10px;
+  border: 1px solid #ddd;
+  border-top: none;
+}
+
+.collapsible-content.open {
+  max-height: 1000px; /* Sätt tillräckligt stor max-höjd för att rymma innehållet */
 }

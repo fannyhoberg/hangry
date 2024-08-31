@@ -3,19 +3,26 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { EstablishmentFormData } from "../types/Establishment.types";
+import { User } from "firebase/auth";
 
 interface EstablishmentFormProps {
-    handleFormSubmit: (data: EstablishmentFormData) => Promise<void>
+    handleFormSubmit: (data: EstablishmentFormData) => Promise<void>;
+    admin?: User;
+    initialValues?: Partial<EstablishmentFormData>;
 }
 
-const EstablishmentForm: React.FC<EstablishmentFormProps> = ({ handleFormSubmit }) => {
+const EstablishmentForm: React.FC<EstablishmentFormProps> = ({ handleFormSubmit, admin, initialValues }) => {
     const {
         getValues,
         handleSubmit,
         register,
         reset,
         formState: { errors },
-    } = useForm<EstablishmentFormData>();
+    } = useForm<EstablishmentFormData>({
+        defaultValues: {
+            ...initialValues
+        }
+    });
 
     const onFormSubmit: SubmitHandler<EstablishmentFormData> = (data) => {
         handleFormSubmit(data);
@@ -201,15 +208,17 @@ const EstablishmentForm: React.FC<EstablishmentFormProps> = ({ handleFormSubmit 
                 </InputGroup>
             </Form.Group>
 
-            <Form.Group controlId="photoFiles" className="mb-3">
-                <Form.Label>Photos</Form.Label>
-                <Form.Control
-                    accept="image/gif,image/jpeg,image/png,image/webp"
-                    type="file"
-                    {...register("photos")}
-                    multiple
-                />
-            </Form.Group>
+            {admin && (
+                <Form.Group controlId="photoFiles" className="mb-3">
+                    <Form.Label>Photos</Form.Label>
+                    <Form.Control
+                        accept="image/gif,image/jpeg,image/png,image/webp"
+                        type="file"
+                        {...register("photos")}
+                        multiple
+                    />
+                </Form.Group>
+            )}
 
             <Button type="submit">Submit</Button>
         </Form>

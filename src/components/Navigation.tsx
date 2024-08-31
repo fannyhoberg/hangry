@@ -3,38 +3,59 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Link, NavLink } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import { Image, NavDropdown } from "react-bootstrap";
 
 const Navigation = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, userPhotoUrl, userName, userEmail } = useAuth();
 
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar className="bg-body-tertiary">
       <Container>
         <Navbar.Brand as={Link} to="/" className="logo">
-          Home
+          Hangry
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            {currentUser ? (
-              <>
-                <Nav.Link as={NavLink} end to="/add-establishment">
+        <Nav className="ms-auto">
+          {currentUser ? (
+            <>
+              <NavDropdown
+                title={
+                  userPhotoUrl ? (
+                    <Image
+                      src={userPhotoUrl}
+                      height={30}
+                      width={30}
+                      roundedCircle
+                    />
+                  ) : (
+                    userName || userEmail
+                  )
+                }
+              >
+                <NavDropdown.Item as={NavLink} end to="/add-establishment">
                   Add establishment
-                </Nav.Link>
-                <Nav.Link as={NavLink} end to="/logout">
+                </NavDropdown.Item>
+                <NavDropdown.Item as={NavLink} end to="/update-profile">
+                  Update profile
+                </NavDropdown.Item>
+                <NavDropdown.Item as={NavLink} end to="/admin-dashboard">
+                  Admin dashboard
+                </NavDropdown.Item>
+                <NavDropdown.Item as={NavLink} end to="/logout">
                   Logout
-                </Nav.Link>
-              </>
-            ) : (
-              <>
-                {" "}
-                <Nav.Link as={NavLink} end to="/login">
-                  Login{" "}
-                </Nav.Link>
-              </>
-            )}
-          </Nav>
-        </Navbar.Collapse>
+                </NavDropdown.Item>
+              </NavDropdown>
+            </>
+          ) : (
+            <>
+              <Nav.Link as={NavLink} end to="/suggestions">
+                Add Suggestions
+              </Nav.Link>
+              <Nav.Link as={NavLink} end to="/login">
+                Login
+              </Nav.Link>
+            </>
+          )}
+        </Nav>
       </Container>
     </Navbar>
   );

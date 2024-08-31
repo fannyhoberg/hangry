@@ -25,6 +25,9 @@ const Map = () => {
   const [centerPosition, setCenterPosition] =
     useState<PositionCoords>(defaultCenter);
 
+  const myPositionIcon =
+    "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+
   const locations = {
     Min_position: userLocation
       ? {
@@ -119,6 +122,7 @@ const Map = () => {
                     lat: userLocation.coords.latitude,
                     lng: userLocation.coords.longitude,
                   }}
+                  icon={myPositionIcon}
                 />
               )}
 

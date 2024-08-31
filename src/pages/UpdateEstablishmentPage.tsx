@@ -1,18 +1,21 @@
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import { EstablishmentFormData } from "../types/Establishment.types";
-import useAddEstablishment from "../hooks/useAddEstablishment";
 import EstablishmentForm from "../components/EstablishmentForm";
 import useAddFiles from "../hooks/useAddFiles";
 import useAuth from "../hooks/useAuth";
+import { useParams } from "react-router-dom";
+import useGetEstablishMentByID from "../hooks/useGetEstablishMentByID";
 
 
-const AddEstablishmentPage = () => {
+const UpdateEstablishmentPage = () => {
+    const { id } = useParams()
     const { currentUser } = useAuth()
-    const { addEstablishment, error: establishmentError, loading: establishmentLoading } = useAddEstablishment();
     const { uploadPhotos, error: fileUploadError, loading: fileUploadLoading } = useAddFiles()
+    const { document: establishment, error: establishmentError, loading: loadingEstablishment } = useGetEstablishMentByID(id);
 
-    // validate address to ensure it is possible to geocode!
+    // Send info as initialvalues to establishment form
+    // Update functionality
 
     const handleFormSubmit = async (data: EstablishmentFormData) => {
         const { photos, ...documentData } = data;
@@ -22,27 +25,33 @@ const AddEstablishmentPage = () => {
             documentData.photoUrls = photoUrls;
         }
 
-        await addEstablishment(documentData);
+        // update in db
     };
 
     return (
         <Container className="py-3 center-y">
+
             {establishmentError && (
                 <div>{establishmentError}</div>
             )}
+
             {fileUploadError && (
                 <div>{fileUploadError}</div>
             )}
-            {establishmentLoading || fileUploadLoading && (
+
+            {fileUploadLoading || loadingEstablishment && (
                 <div>Loading...</div>
             )}
 
-            {currentUser &&
+            {/* IMAGE GALLERY WITH ESTABLISHMENT'S IMAGES
+                AND FUNCTIONALITY TO DELETE IMAGES */}
+
+            {currentUser && establishment &&
                 <Card className="mb-3 mt-5">
                     <Card.Body>
                         <Card.Title className="mb-3">Add Establishment</Card.Title>
 
-                        <EstablishmentForm handleFormSubmit={handleFormSubmit} admin={currentUser} />
+                        <EstablishmentForm handleFormSubmit={handleFormSubmit} admin={currentUser} initialValues={establishment} />
                     </Card.Body>
                 </Card>
             }
@@ -50,4 +59,4 @@ const AddEstablishmentPage = () => {
     );
 };
 
-export default AddEstablishmentPage;
+export default UpdateEstablishmentPage;
