@@ -10,7 +10,8 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { SignUpType } from "../types/User.types";
 import { FirebaseError } from "firebase/app";
-// import { toast } from "react-toastify";
+import { useAddDocument } from "../hooks/useAddDocument";
+import { usersCol } from "../services/firebase";
 
 const SignupPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -23,6 +24,8 @@ const SignupPage = () => {
   const { signup } = useAuth();
   const navigate = useNavigate();
 
+  const { addDocument, error, loading } = useAddDocument();
+
   // Password ref
   const passwordRef = useRef("");
   passwordRef.current = watch("password");
@@ -31,9 +34,15 @@ const SignupPage = () => {
     setIsSubmitting(true);
 
     try {
-      await signup(data.email, data.password);
-      console.log("Something went wrong on Signup page");
+      // Registrera användaren med Firebase Authentication
+      const userCredential = await signup(data.email, data.password);
+      const user = userCredential.user;
 
+      // Lägg till användaren i Firestore-databasen
+      await addDocument(usersCol, {
+        name: user.displayName || "",
+        email: user.email || "",
+      });
       navigate("/");
     } catch (err) {
       if (err instanceof FirebaseError) {

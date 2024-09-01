@@ -8,6 +8,7 @@ import {
   getFirestore,
 } from "firebase/firestore";
 import { Establishment, NewEstablishment } from "../types/Establishment.types";
+import { NewUser, User } from "../types/User.types";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -44,5 +45,8 @@ export const newEstablishmentCol =
 export const suggestionsCol = createCollection<Establishment>("suggestions");
 export const newSuggestionsCol =
   createCollection<NewEstablishment>("suggestions");
+
+export const usersCol = createCollection<User>("users");
+export const newUsersCol = createCollection<NewUser>("users");
 
 export default app;

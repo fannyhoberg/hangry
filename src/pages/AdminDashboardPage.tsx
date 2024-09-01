@@ -2,12 +2,15 @@ import { Container } from "react-bootstrap";
 import CollapsibleSection from "../components/CollapseSection";
 import useGetEstablishments from "../hooks/useGetEstablishments";
 import useGetSuggestions from "../hooks/useGetSuggestions";
+import useGetUsers from "../hooks/useGetUsers";
 
 const AdminDashboardPage = () => {
   const { data: establishments, loading: establishmentLoading } =
     useGetEstablishments();
   const { data: suggestions, loading: suggestionsLoading } =
     useGetSuggestions();
+
+  const { data: users, loading: usersLoading } = useGetUsers();
 
   return (
     <>
@@ -28,14 +31,12 @@ const AdminDashboardPage = () => {
           ></CollapsibleSection>
         )}
 
-        {/* <h2>All Users</h2>
-      <ul>
-        {usersLoading ? (
-          <li>Loading users...</li>
-        ) : (
-          users.map((user) => <li key={user.uid}>{user.name || user.email}</li>)
+        {users && !usersLoading && (
+          <CollapsibleSection
+            title="Admin users"
+            children={users}
+          ></CollapsibleSection>
         )}
-      </ul> */}
       </Container>
     </>
   );

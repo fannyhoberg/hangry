@@ -16,3 +16,12 @@ export type UpdateProfileType = {
   password: string;
   confirmPassword: string;
 };
+
+export type User = {
+  _id: string;
+  name: string;
+  // photos: FileList;
+  email: string;
+};
+
+export type NewUser = Omit<User, "_id">;
