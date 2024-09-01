@@ -75,20 +75,13 @@ const Map = () => {
   }, [userLocation]);
 
   if (loading || !centerPosition) {
-    console.log("Loading data and location....");
+    console.log("Loading data and location...");
     return <div>Loading map...</div>;
   } else if (!loading && centerPosition && !isLoading) {
     console.log("Data and location aquired, map rendering...");
     return (
       <>
-        <div
-          style={{
-            position: "relative",
-            top: "10px",
-            left: "10px",
-            zIndex: 1,
-          }}
-        >
+        <div>
           <select
             onChange={handleLocationChange}
             style={{ padding: "8px", fontSize: "16px" }}
@@ -100,7 +93,7 @@ const Map = () => {
           </select>
         </div>
         <div className="map-wrapper">
-          {loading && console.log("Loading establishments....")}
+          {loading && console.log("Loading establishments...")}
 
           {!loading && !isLoading && (
             <GoogleMap
