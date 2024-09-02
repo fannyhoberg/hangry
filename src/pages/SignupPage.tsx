@@ -41,9 +41,9 @@ const SignupPage = () => {
       // Lägg till användaren i Firestore-databasen
       await addDocument(usersCol, {
         _id: user.uid,
-        name: user.displayName || "",
         email: user.email || "",
       });
+
       navigate("/");
     } catch (err) {
       if (err instanceof FirebaseError) {

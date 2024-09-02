@@ -25,7 +25,7 @@ const useAddFiles = () => {
           uploadTask.on(
             "state_changed",
             (snapshot) => {
-              console.log(snapshot.bytesTransferred);
+              console.log("snapshot", snapshot.bytesTransferred);
             },
             (err) => {
               setError(err.message);

@@ -1,5 +1,7 @@
 export type SignUpType = {
+  name: string;
   email: string;
+  photos: FileList;
   password: string;
   confirmPassword: string;
 };
@@ -19,7 +21,7 @@ export type UpdateProfileType = {
 
 export type User = {
   _id: string;
-  name: string;
+  name?: string;
   // photos: FileList;
   email: string;
 };
