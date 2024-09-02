@@ -6,9 +6,8 @@ import useAddFiles from "../hooks/useAddFiles";
 import useAuth from "../hooks/useAuth";
 import { useParams } from "react-router-dom";
 import useGetEstablishMentByID from "../hooks/useGetEstablishMentByID";
-import { doc, updateDoc } from "firebase/firestore";
-import { establishmentCol } from "../services/firebase";
 import { useEffect, useState } from "react";
+import { useUpdateEstablishment } from "../hooks/useUpdateEstablishment";
 
 
 const UpdateEstablishmentPage = () => {
@@ -17,9 +16,9 @@ const UpdateEstablishmentPage = () => {
     const { uploadPhotos, error: fileUploadError, loading: fileUploadLoading } = useAddFiles()
     const { document: establishment, error: establishmentError, loading: loadingEstablishment } = useGetEstablishMentByID(id);
     const [initialValues, setInitialValues] = useState<Partial<Establishment> | null>(null)
+    const { updateEstablishment, error: updateError, isLoading: updateLoading } = useUpdateEstablishment();
 
-    // Send info as initialvalues to establishment form
-    // Update functionality
+
 
     const handleFormSubmit = async (data: EstablishmentFormData) => {
         const { photos, ...documentData } = data;
@@ -29,9 +28,11 @@ const UpdateEstablishmentPage = () => {
             documentData.photoUrls = photoUrls;
         }
 
-        // update in db
-        const docRef = doc(establishmentCol, id)
-        return await updateDoc(docRef, documentData)
+        if (!id) {
+            return;
+        }
+
+        await updateEstablishment(id, documentData)
     };
 
     useEffect(() => {
@@ -49,7 +50,11 @@ const UpdateEstablishmentPage = () => {
                 <div>{fileUploadError}</div>
             )}
 
-            {fileUploadLoading || loadingEstablishment && (
+            {updateError && (
+                <div>{updateError}</div>
+            )}
+
+            {fileUploadLoading || loadingEstablishment || updateLoading && (
                 <div>Loading...</div>
             )}
 
