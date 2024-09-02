@@ -22,8 +22,15 @@ export type UpdateProfileType = {
 export type User = {
   _id: string;
   name?: string;
-  // photos: FileList;
+  photoUrls?: string;
   email: string;
 };
 
 export type NewUser = Omit<User, "_id">;
+
+export type Admin = {
+  _id: string;
+  name?: string;
+  photoUrls?: string;
+  email: string;
+};

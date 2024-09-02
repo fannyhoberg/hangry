@@ -67,20 +67,23 @@ const UpdateProfilePage = () => {
       setIsSubmitting(true);
       setIsError(false);
 
-      if (data.photos.length) {
-        const photoFile = data.photos;
-        const folder = `profile-pictures/${currentUser?.uid}`;
+      if (userDocRef) {
+        if (data.photos.length) {
+          const photoFile = data.photos;
+          const folder = `profile-pictures/${currentUser?.uid}`;
 
-        try {
-          const photoUrls = await uploadPhotos(photoFile, folder);
+          try {
+            const photoUrls = await uploadPhotos(photoFile, folder);
 
-          if (photoUrls && photoUrls.length > 0) {
-            const photoURL = photoUrls[0];
-            await setPhotoUrl(photoURL);
+            if (photoUrls && photoUrls.length > 0) {
+              const photoURL = photoUrls[0];
+              await setPhotoUrl(photoURL);
+              await updateDoc(userDocRef, { photoUrls: photoURL });
+            }
+          } catch (err) {
+            setIsError(true);
+            return;
           }
-        } catch (err) {
-          setIsError(true);
-          return;
         }
       }
 
