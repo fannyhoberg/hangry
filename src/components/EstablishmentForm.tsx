@@ -26,7 +26,11 @@ const EstablishmentForm: React.FC<EstablishmentFormProps> = ({ handleFormSubmit,
 
     const onFormSubmit: SubmitHandler<EstablishmentFormData> = (data) => {
         handleFormSubmit(data);
-        reset();
+        if (!initialValues) {
+
+            reset();
+        }
+        // TOAST OR SOMETHING TO CONFIRM TO USER IT WAS SUCCESSFUL
     }
 
     return (

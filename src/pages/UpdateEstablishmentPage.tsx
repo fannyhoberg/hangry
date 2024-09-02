@@ -1,11 +1,14 @@
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
-import { EstablishmentFormData } from "../types/Establishment.types";
+import { Establishment, EstablishmentFormData } from "../types/Establishment.types";
 import EstablishmentForm from "../components/EstablishmentForm";
 import useAddFiles from "../hooks/useAddFiles";
 import useAuth from "../hooks/useAuth";
 import { useParams } from "react-router-dom";
 import useGetEstablishMentByID from "../hooks/useGetEstablishMentByID";
+import { doc, updateDoc } from "firebase/firestore";
+import { establishmentCol } from "../services/firebase";
+import { useEffect, useState } from "react";
 
 
 const UpdateEstablishmentPage = () => {
@@ -13,6 +16,7 @@ const UpdateEstablishmentPage = () => {
     const { currentUser } = useAuth()
     const { uploadPhotos, error: fileUploadError, loading: fileUploadLoading } = useAddFiles()
     const { document: establishment, error: establishmentError, loading: loadingEstablishment } = useGetEstablishMentByID(id);
+    const [initialValues, setInitialValues] = useState<Partial<Establishment> | null>(null)
 
     // Send info as initialvalues to establishment form
     // Update functionality
@@ -26,7 +30,13 @@ const UpdateEstablishmentPage = () => {
         }
 
         // update in db
+        const docRef = doc(establishmentCol, id)
+        return await updateDoc(docRef, documentData)
     };
+
+    useEffect(() => {
+        setInitialValues(establishment)
+    }, [establishment])
 
     return (
         <Container className="py-3 center-y">
@@ -46,12 +56,12 @@ const UpdateEstablishmentPage = () => {
             {/* IMAGE GALLERY WITH ESTABLISHMENT'S IMAGES
                 AND FUNCTIONALITY TO DELETE IMAGES */}
 
-            {currentUser && establishment &&
+            {currentUser && initialValues &&
                 <Card className="mb-3 mt-5">
                     <Card.Body>
                         <Card.Title className="mb-3">Add Establishment</Card.Title>
 
-                        <EstablishmentForm handleFormSubmit={handleFormSubmit} admin={currentUser} initialValues={establishment} />
+                        <EstablishmentForm handleFormSubmit={handleFormSubmit} admin={currentUser} initialValues={initialValues} />
                     </Card.Body>
                 </Card>
             }
