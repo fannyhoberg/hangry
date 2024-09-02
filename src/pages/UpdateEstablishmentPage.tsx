@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import useGetEstablishMentByID from "../hooks/useGetEstablishMentByID";
 import { useEffect, useState } from "react";
 import { useUpdateEstablishment } from "../hooks/useUpdateEstablishment";
+import { establishmentCol } from "../services/firebase";
 
 
 const UpdateEstablishmentPage = () => {
@@ -16,7 +17,7 @@ const UpdateEstablishmentPage = () => {
     const { uploadPhotos, error: fileUploadError, loading: fileUploadLoading } = useAddFiles()
     const { document: establishment, error: establishmentError, loading: loadingEstablishment } = useGetEstablishMentByID(id);
     const [initialValues, setInitialValues] = useState<Partial<Establishment> | null>(null)
-    const { updateEstablishment, error: updateError, isLoading: updateLoading } = useUpdateEstablishment();
+    const { updateDocument: updateEstablishment, error: updateError, isLoading: updateLoading } = useUpdateEstablishment();
 
 
 
@@ -32,7 +33,7 @@ const UpdateEstablishmentPage = () => {
             return;
         }
 
-        await updateEstablishment(id, documentData)
+        await updateEstablishment(id, establishmentCol, documentData)
     };
 
     useEffect(() => {

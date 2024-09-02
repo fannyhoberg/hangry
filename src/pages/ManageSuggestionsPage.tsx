@@ -6,12 +6,15 @@ import useAddFiles from "../hooks/useAddFiles";
 import useAuth from "../hooks/useAuth";
 import { useParams } from "react-router-dom";
 import useGetSuggestionByID from "../hooks/useGetSuggestionByID";
+import useUpdateSuggestion from "../hooks/useUpdateSuggestion";
+import { suggestionsCol } from "../services/firebase";
 
 const ManageSuggestionsPage = () => {
     const { id } = useParams()
     const { currentUser } = useAuth()
     const { uploadPhotos, error: fileUploadError, loading: fileUploadLoading } = useAddFiles()
     const { document: suggestion, error: suggestionError, loading: loadingSuggestion } = useGetSuggestionByID(id);
+    const { updateDocument: updateSuggestion } = useUpdateSuggestion()
 
     const handleFormSubmit = async (data: EstablishmentFormData) => {
         const { photos, ...documentData } = data;
@@ -26,6 +29,7 @@ const ManageSuggestionsPage = () => {
         }
 
         // updateSuggestionDoc in db
+        await updateSuggestion(id, suggestionsCol, documentData)
     };
 
     const handleAddEstablishment = async (data: EstablishmentFormData) => {
