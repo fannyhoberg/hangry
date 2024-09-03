@@ -15,6 +15,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
 
 const UpdateProfilePage = () => {
+  const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isUpdated, setIsUpdated] = useState(false);
@@ -33,10 +34,6 @@ const UpdateProfilePage = () => {
 
   const { uploadPhotos } = useAddFiles();
 
-  if (!currentUser) {
-    return <p>Can't find currentUser...</p>;
-  }
-
   const {
     handleSubmit,
     register,
@@ -54,7 +51,7 @@ const UpdateProfilePage = () => {
   const passwordRef = useRef("");
   passwordRef.current = watch("password");
 
-  const { data: userData } = useGetUserDoc(currentUser.uid);
+  const { data: userData, loading } = useGetUserDoc(currentUser?.uid);
 
   // Make sure userData is not empty and has the expected structure
   const userId = userData && userData.length > 0 ? userData[0]._id : null;
@@ -66,6 +63,7 @@ const UpdateProfilePage = () => {
     try {
       setIsSubmitting(true);
       setIsError(false);
+      setError(null);
 
       if (userDocRef) {
         if (data.photos.length) {
@@ -82,6 +80,11 @@ const UpdateProfilePage = () => {
             }
           } catch (err) {
             setIsError(true);
+            if (err instanceof Error) {
+              setError(err.message)
+            } else {
+              setError("Something went wrong trying to update profile")
+            }
             return;
           }
         }
@@ -114,6 +117,13 @@ const UpdateProfilePage = () => {
 
   return (
     <Container className="py-3 center-y">
+      {loading && (
+        <div className="loading">Loading...</div>
+      )}
+      {isError && error && (
+        <div className="error">{error}</div>
+      )}
+
       <Row>
         <Col md={{ span: 6, offset: 3 }}>
           <Card className="mb-3">

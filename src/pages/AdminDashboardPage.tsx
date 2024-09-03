@@ -22,8 +22,12 @@ const AdminDashboardPage = () => {
     try {
       new URL(url);
       return true;
-    } catch (e) {
-      return false;
+    } catch (err) {
+      if (err instanceof Error) {
+        throw new Error(err.message);
+      } else {
+        throw new Error("Invalid URL");
+      }
     }
   };
   const establishmentColumns: ColumnDef<Establishment>[] = [
