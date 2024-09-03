@@ -8,16 +8,16 @@ interface ImageCarouselProps {
 
 const ImageCarousel: React.FC<ImageCarouselProps> = ({ establishmentName, photoUrls }) => {
     return (
-        <div className="d-flex justify-content-center flex-row p-4">
-            <Carousel>
+        <div className="carousel-wrapper">
+            <Carousel className="w-100 h-100">
                 {photoUrls && photoUrls.map(url => (
-                    <Carousel.Item key={url}>
-                        <Image src={url} style={{ width: "100%" }} alt={`Image of ${establishmentName}`} />
+                    <Carousel.Item key={url} className="w-100 h-100" >
+                        <Image src={url} className="carousel-image" alt={`Image of ${establishmentName}`} />
                     </Carousel.Item>
                 ))}
-
             </Carousel>
         </div>
+
     )
 }
 
