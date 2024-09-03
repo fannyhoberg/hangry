@@ -19,11 +19,11 @@ const Map = () => {
   const { data: establishments, loading } = useGetEstablishments();
   const { userLocation, isLoading } = useGetUserLocation();
   const [showInfoWindow, setShowInfoWindow] = useState(false);
-  const [infoWindowPosition, setInfoWindowPosition] =
-    useState<PositionCoords | null>(null);
+  const [infoWindowPosition, setInfoWindowPosition] = useState<PositionCoords | null>(null);
   const [info, setInfo] = useState<Establishment | null>(null);
-  const [centerPosition, setCenterPosition] =
-    useState<PositionCoords>(defaultCenter);
+  const [centerPosition, setCenterPosition] = useState<PositionCoords>(defaultCenter);
+  // const [currentMarker, setCurrentMarker] = useState<PositionCoords | null>(null);
+  // const [url, setUrl] = useState<string>("");
 
   console.log("Establishments", establishments);
   console.log("userLocation", userLocation);
@@ -48,18 +48,25 @@ const Map = () => {
     setInfoWindowPosition(null);
   };
 
-  const handleMarkerClick = (
-    position: PositionCoords,
-    establishment: Establishment
-  ) => {
+  // const handleDirectionsClick = () => {
+  //   const handleDirections = async (origin: PositionCoords, destination: PositionCoords) => {
+  //     const directions = await getDirections({ origin, destination });
+  //     console.log("directions", directions);
+  //   };
+
+  //   if (currentMarker) {
+  //     handleDirections(centerPosition, currentMarker);
+  //   }
+  // };
+
+  const handleMarkerClick = (position: PositionCoords, establishment: Establishment) => {
     setInfo(establishment);
     setShowInfoWindow(true);
     setInfoWindowPosition(position);
+    // setCurrentMarker(position);
   };
 
-  const handleLocationChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleLocationChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCity = event.target.value;
     const newCenter = locations[selectedCity as keyof typeof locations];
     setCenterPosition(newCenter);
@@ -74,6 +81,13 @@ const Map = () => {
     }
   }, [userLocation]);
 
+  // useEffect(() => {
+  //   if (currentMarker) {
+  //     const url = generateDirectionsURL(centerPosition, currentMarker);
+  //     setUrl(url);
+  //   }
+  // }, [currentMarker, centerPosition]);
+
   if (loading || !centerPosition) {
     console.log("Loading data and location...");
     return <div>Loading map...</div>;
@@ -82,10 +96,7 @@ const Map = () => {
     return (
       <>
         <div>
-          <select
-            onChange={handleLocationChange}
-            style={{ padding: "8px", fontSize: "16px" }}
-          >
+          <select onChange={handleLocationChange} style={{ padding: "8px", fontSize: "16px" }}>
             <option value="Min_position">Min position</option>
             <option value="Lund">Lund</option>
             <option value="Malmö">Malmö</option>
@@ -107,6 +118,7 @@ const Map = () => {
                     handleClose={handleClose}
                     position={infoWindowPosition}
                     info={info}
+                    centerPosition={centerPosition}
                   />
                 )}
 
@@ -131,9 +143,7 @@ const Map = () => {
 
                     return (
                       <Marker
-                        onClick={() =>
-                          handleMarkerClick(position, establishment)
-                        }
+                        onClick={() => handleMarkerClick(position, establishment)}
                         key={establishment._id}
                         position={position}
                       />
