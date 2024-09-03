@@ -13,6 +13,8 @@ import { FirebaseError } from "firebase/app";
 
 const LoginPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isError, setIsError] = useState(false);
+
   const {
     handleSubmit,
     register,
@@ -29,6 +31,8 @@ const LoginPage = () => {
       console.log("You are logged in");
       navigate("/");
     } catch (err) {
+      setIsError(true);
+
       if (err instanceof FirebaseError) {
         console.error(err.message);
       } else if (err instanceof Error) {
@@ -83,6 +87,12 @@ const LoginPage = () => {
                 <Button disabled={isSubmitting} type="submit" variant="primary">
                   {isSubmitting ? "Logging in..." : "Log in"}
                 </Button>
+
+                {isError && (
+                  <p style={{ color: "red" }}>
+                    Email or password incorrect, try again.
+                  </p>
+                )}
               </Form>
             </Card.Body>
           </Card>

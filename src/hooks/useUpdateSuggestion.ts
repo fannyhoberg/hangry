@@ -1,5 +1,7 @@
 import { useUpdateDocument } from "./useUpdateDocument";
 
-export const useUpdateEstablishment = () => {
+const useUpdateSuggestion = () => {
   return useUpdateDocument();
 };
+
+export default useUpdateSuggestion;

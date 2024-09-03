@@ -10,11 +10,13 @@ import Row from "react-bootstrap/Row";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { UpdateProfileType } from "../types/User.types";
 import useAddFiles from "../hooks/useAddFiles";
+import useGetUserDoc from "../hooks/useGetUserDoc";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../services/firebase";
 
 const UpdateProfilePage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isError, setIsError] = useState(false);
-
   const [isUpdated, setIsUpdated] = useState(false);
 
   const {
@@ -28,7 +30,12 @@ const UpdateProfilePage = () => {
     setPassword,
     setPhotoUrl,
   } = useAuth();
+
   const { uploadPhotos } = useAddFiles();
+
+  if (!currentUser) {
+    return <p>Can't find currentUser...</p>;
+  }
 
   const {
     handleSubmit,
@@ -42,33 +49,49 @@ const UpdateProfilePage = () => {
     },
   });
 
+  console.log("userPhotoUrl", userPhotoUrl);
+
   const passwordRef = useRef("");
   passwordRef.current = watch("password");
+
+  const { data: userData } = useGetUserDoc(currentUser.uid);
+
+  // Make sure userData is not empty and has the expected structure
+  const userId = userData && userData.length > 0 ? userData[0]._id : null;
+
+  // Create the document reference using the extracted _id
+  const userDocRef = userId ? doc(db, "users", userId) : null;
 
   const onUpdate: SubmitHandler<UpdateProfileType> = async (data) => {
     try {
       setIsSubmitting(true);
       setIsError(false);
 
-      if (data.photos.length) {
-        const photoFile = data.photos;
-        const folder = `profile-pictures/${currentUser?.uid}`;
+      if (userDocRef) {
+        if (data.photos.length) {
+          const photoFile = data.photos;
+          const folder = `profile-pictures/${currentUser?.uid}`;
 
-        try {
-          const photoUrls = await uploadPhotos(photoFile, folder);
+          try {
+            const photoUrls = await uploadPhotos(photoFile, folder);
 
-          if (photoUrls && photoUrls.length > 0) {
-            const photoURL = photoUrls[0];
-            await setPhotoUrl(photoURL);
+            if (photoUrls && photoUrls.length > 0) {
+              const photoURL = photoUrls[0];
+              await setPhotoUrl(photoURL);
+              await updateDoc(userDocRef, { photoUrls: photoURL });
+            }
+          } catch (err) {
+            setIsError(true);
+            return;
           }
-        } catch (err) {
-          setIsError(true);
-          return;
         }
       }
 
-      if (data.name !== (userName ?? "")) {
-        await setDisplayName(data.name);
+      if (userDocRef) {
+        if (data.name !== (userName ?? "")) {
+          await setDisplayName(data.name);
+          await updateDoc(userDocRef, { name: data.name });
+        }
       }
 
       if (data.email !== (userEmail ?? "")) {
@@ -129,9 +152,7 @@ const UpdateProfilePage = () => {
                   <Form.Control
                     placeholder="Name"
                     type="text"
-                    {...register("name", {
-                      required: "Please enter your name.",
-                    })}
+                    {...register("name")}
                   />
                   {errors.name && (
                     <p className="invalid">

@@ -1,7 +1,11 @@
-import { Container } from "react-bootstrap";
-import CollapsibleSection from "../components/CollapseSection";
+import { Container, Image } from "react-bootstrap";
 import useGetEstablishments from "../hooks/useGetEstablishments";
 import useGetSuggestions from "../hooks/useGetSuggestions";
+import useGetUsers from "../hooks/useGetUsers";
+import AdminDataTable from "../components/tables/AdminDataTable";
+import { ColumnDef } from "@tanstack/react-table";
+import { Establishment } from "../types/Establishment.types";
+import { User } from "../types/User.types";
 
 const AdminDashboardPage = () => {
   const { data: establishments, loading: establishmentLoading } =
@@ -9,33 +13,93 @@ const AdminDashboardPage = () => {
   const { data: suggestions, loading: suggestionsLoading } =
     useGetSuggestions();
 
+  const { data: users, loading: usersLoading } = useGetUsers();
+
+  console.log("establishments data", establishments);
+
+  const isValidUrl = (url: string | undefined): boolean => {
+    if (!url) return false; // Handle undefined or empty strings
+    try {
+      new URL(url);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+  const establishmentColumns: ColumnDef<Establishment>[] = [
+    {
+      accessorKey: "name",
+      header: "Name",
+    },
+    {
+      accessorKey: "address",
+      header: "Address",
+    },
+    {
+      accessorKey: "city",
+      header: "City",
+    },
+  ];
+
+  const usersColumns: ColumnDef<User>[] = [
+    {
+      accessorKey: "photoUrls",
+      header: "Photo",
+      cell: (info) => {
+        const url = info.getValue() as string | undefined;
+        return url && isValidUrl(url) ? (
+          <Image
+            src={url}
+            alt="User Photo"
+            style={{ width: "50px", height: "50px", borderRadius: "50%" }}
+          />
+        ) : (
+          <Image
+            src={"https://via.placeholder.com/200"}
+            alt="User Photo"
+            style={{ width: "50px", height: "50px", borderRadius: "50%" }}
+          />
+        );
+      },
+    },
+    {
+      accessorKey: "name",
+      header: "Name",
+    },
+    {
+      accessorKey: "email",
+      header: "Email",
+    },
+  ];
+
   return (
     <>
       <Container className="py-3 center-y">
         <h1>Admin Dashboard</h1>
 
         {establishments && !establishmentLoading && (
-          <CollapsibleSection
-            title="Establishments"
-            children={establishments}
-          ></CollapsibleSection>
+          <AdminDataTable
+            mainTitle={"Establishments"}
+            columns={establishmentColumns}
+            data={establishments}
+          ></AdminDataTable>
         )}
 
         {suggestions && !suggestionsLoading && (
-          <CollapsibleSection
-            title="User Suggestions"
-            children={suggestions}
-          ></CollapsibleSection>
+          <AdminDataTable
+            mainTitle={"Suggestions"}
+            columns={establishmentColumns}
+            data={suggestions}
+          ></AdminDataTable>
         )}
 
-        {/* <h2>All Users</h2>
-      <ul>
-        {usersLoading ? (
-          <li>Loading users...</li>
-        ) : (
-          users.map((user) => <li key={user.uid}>{user.name || user.email}</li>)
+        {users && !usersLoading && (
+          <AdminDataTable
+            mainTitle={"Admins"}
+            columns={usersColumns}
+            data={users}
+          ></AdminDataTable>
         )}
-      </ul> */}
       </Container>
     </>
   );

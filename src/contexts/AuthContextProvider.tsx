@@ -88,6 +88,8 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
       throw new Error("Unauthorised, you are not logged in");
     }
 
+    console.log("Inside auth setDisplayName");
+
     return updateProfile(currentUser, {
       displayName: name,
     });
