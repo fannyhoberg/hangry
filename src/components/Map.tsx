@@ -2,7 +2,7 @@ import { GoogleMap, Marker } from "@react-google-maps/api";
 import useGetEstablishmentsByCity from "../hooks/useGetEstablishmentsByCity";
 import useGetUserLocation from "../hooks/useGetUserLocation";
 import { useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Establishment, PositionCoords } from "../types/Establishment.types";
 import MarkerInfoWindow from "./map/MarkerInfoWindow";
 
@@ -31,17 +31,19 @@ const Map = () => {
   const myPositionIcon =
     "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
 
-  const locations = {
-    Min_position: userLocation
-      ? {
+  const locations = useMemo(() => {
+    return {
+      Min_position: userLocation
+        ? {
           lat: userLocation.coords.latitude,
           lng: userLocation.coords.longitude,
         }
-      : defaultCenter,
-    Lund: { lat: 55.7046601, lng: 13.1910073 },
-    Malmö: { lat: 55.6052931, lng: 13.0001566 },
-    Eslöv: { lat: 55.83900838618268, lng: 13.30492141526424 },
-  };
+        : defaultCenter,
+      Lund: { lat: 55.7046601, lng: 13.1910073 },
+      Malmö: { lat: 55.6052931, lng: 13.0001566 },
+      Eslöv: { lat: 55.83900838618268, lng: 13.30492141526424 },
+    }
+  }, [userLocation]);
 
   const handleClose = () => {
     setShowInfoWindow(false);
@@ -88,7 +90,7 @@ const Map = () => {
 
       setCenterPosition(newCenter);
     }
-  }, [searchParams]);
+  }, [searchParams, locations, city]);
 
   if (loading || !centerPosition) {
     console.log("Loading data and location...");
