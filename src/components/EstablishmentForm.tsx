@@ -10,12 +10,13 @@ interface EstablishmentFormProps {
     handleFormSubmit: (data: EstablishmentFormData) => Promise<void>;
     admin?: User;
     initialValues?: Partial<EstablishmentFormData>;
-    manageSuggestions?: boolean
+    manageEstablishment?: boolean;
+    manageSuggestions?: boolean;
     handleAddEstablishment?: (data: EstablishmentFormData) => Promise<void>;
-    handleDeleteSuggestion?: (data: EstablishmentFormData) => Promise<void>;
+    handleDelete?: (data: EstablishmentFormData) => Promise<void>;
 }
 
-const EstablishmentForm: React.FC<EstablishmentFormProps> = ({ handleFormSubmit, admin, initialValues, manageSuggestions, handleAddEstablishment, handleDeleteSuggestion }) => {
+const EstablishmentForm: React.FC<EstablishmentFormProps> = ({ handleFormSubmit, admin, initialValues, manageEstablishment, manageSuggestions, handleAddEstablishment, handleDelete }) => {
     const {
         getValues,
         handleSubmit,
@@ -27,7 +28,9 @@ const EstablishmentForm: React.FC<EstablishmentFormProps> = ({ handleFormSubmit,
             ...initialValues
         }
     });
-    const [submissionType, setSubmissionType] = useState<string>("update")
+    const [submissionType, setSubmissionType] = useState<string>("update");
+
+    const managePage = manageEstablishment ? true : manageSuggestions ? true : false
 
     const onFormSubmit: SubmitHandler<EstablishmentFormData> = async (data) => {
 
@@ -39,8 +42,8 @@ const EstablishmentForm: React.FC<EstablishmentFormProps> = ({ handleFormSubmit,
                 break;
 
             case "delete":
-                if (handleDeleteSuggestion) {
-                    await handleDeleteSuggestion(data)
+                if (handleDelete) {
+                    await handleDelete(data)
                 }
                 break;
 
@@ -250,37 +253,38 @@ const EstablishmentForm: React.FC<EstablishmentFormProps> = ({ handleFormSubmit,
                 </Form.Group>
             )}
 
-            {!manageSuggestions &&
+            {!manageSuggestions && !manageEstablishment &&
                 <Button type="submit">Submit</Button>
             }
-            {manageSuggestions && (
+
+            {managePage && (
 
                 <>
-
                     <Button
-                        className="me-2"
+                        className="me-2 mb-2"
                         name="update"
                         onClick={(e) => setSubmissionType(e.currentTarget.name)}
                         type="submit"
                     >Update</Button>
 
                     <Button
-                        className="me-2"
-                        type="submit"
-                        name="add"
-                        onClick={(e) => setSubmissionType(e.currentTarget.name)}
-                        variant="success"
-                    >Add Establishment</Button>
-
-                    <Button
-                        className="me-2"
+                        className="me-2 mb-2"
                         name="delete"
                         onClick={(e) => setSubmissionType(e.currentTarget.name)}
                         type="submit"
                         variant="danger"
                     >Delete</Button>
-
                 </>
+            )}
+
+            {!manageEstablishment && manageSuggestions && (
+                <Button
+                    className="me-2 mb-2"
+                    name="add"
+                    onClick={(e) => setSubmissionType(e.currentTarget.name)}
+                    type="submit"
+                    variant="success"
+                >Add Establishment</Button>
             )}
         </Form>
     )

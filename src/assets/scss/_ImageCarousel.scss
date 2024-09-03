@@ -1,0 +1,23 @@
+.carousel-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+
+  height: 35vh;
+  overflow: hidden;
+
+  .carousel-image {
+    display: block;
+    width: 100%;
+
+    object-fit: cover;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .carousel-wrapper {
+    height: 55vh;
+  }
+}

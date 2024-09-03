@@ -108,7 +108,7 @@ const ManageSuggestionsPage = () => {
                         <EstablishmentForm
                             admin={currentUser}
                             handleAddEstablishment={handleAddEstablishment}
-                            handleDeleteSuggestion={handleDeleteSuggestion}
+                            handleDelete={handleDeleteSuggestion}
                             handleFormSubmit={handleFormSubmit}
                             initialValues={suggestion}
                             manageSuggestions
