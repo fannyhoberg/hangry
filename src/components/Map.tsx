@@ -53,7 +53,6 @@ const Map = () => {
     setInfo(establishment);
     setShowInfoWindow(true);
     setInfoWindowPosition(position);
-    // setCurrentMarker(position);
   };
 
   const handleLocationChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -104,7 +103,9 @@ const Map = () => {
           <option value="Malmö">Malmö</option>
           <option value="Eslöv">Eslöv</option>
         </select>
-        <Button onClick={() => setShowList(!showList)}>Visa lista</Button>
+        {establishments && establishments.length > 1 && (
+          <Button onClick={() => setShowList(!showList)}>Visa lista</Button>
+        )}
       </div>
       <div className="map-wrapper">
         {!loading && !isLoading && (
@@ -160,15 +161,6 @@ const Map = () => {
           establishments={establishments}
         ></CardList>
       )}
-
-      <div>
-        <ul>
-          {establishments &&
-            establishments.map((establishment) => (
-              <li key={establishment._id}>{establishment.name}</li>
-            ))}
-        </ul>
-      </div>
     </>
   );
 };
