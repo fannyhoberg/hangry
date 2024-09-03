@@ -5,6 +5,8 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { Establishment, PositionCoords } from "../types/Establishment.types";
 import MarkerInfoWindow from "./map/MarkerInfoWindow";
+import CardList from "./map/CardList";
+import { Button } from "react-bootstrap";
 
 const containerStyle = {
   width: "100%",
@@ -22,11 +24,10 @@ const Map = () => {
   const { data: establishments, loading } = useGetEstablishmentsByCity(city);
   const { userLocation, isLoading } = useGetUserLocation();
   const [showInfoWindow, setShowInfoWindow] = useState(false);
-  const [infoWindowPosition, setInfoWindowPosition] =
-    useState<PositionCoords | null>(null);
+  const [infoWindowPosition, setInfoWindowPosition] = useState<PositionCoords | null>(null);
   const [info, setInfo] = useState<Establishment | null>(null);
-  const [centerPosition, setCenterPosition] =
-    useState<PositionCoords>(defaultCenter);
+  const [centerPosition, setCenterPosition] = useState<PositionCoords>(defaultCenter);
+  const [showList, setShowList] = useState<boolean>(false);
 
   const myPositionIcon =
     "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
@@ -50,19 +51,14 @@ const Map = () => {
     setInfoWindowPosition(null);
   };
 
-  const handleMarkerClick = (
-    position: PositionCoords,
-    establishment: Establishment
-  ) => {
+  const handleMarkerClick = (position: PositionCoords, establishment: Establishment) => {
     setInfo(establishment);
     setShowInfoWindow(true);
     setInfoWindowPosition(position);
     // setCurrentMarker(position);
   };
 
-  const handleLocationChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleLocationChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCity = event.target.value;
     const newCenter = locations[selectedCity as keyof typeof locations];
     setCenterPosition(newCenter);
@@ -110,6 +106,7 @@ const Map = () => {
           <option value="Malmö">Malmö</option>
           <option value="Eslöv">Eslöv</option>
         </select>
+        <Button onClick={() => setShowList(!showList)}>Visa lista</Button>
       </div>
       <div className="map-wrapper">
         {!loading && !isLoading && (
@@ -157,6 +154,15 @@ const Map = () => {
           </GoogleMap>
         )}
       </div>
+
+      {establishments && showList && (
+        <CardList
+          handleButtonClick={() => setShowList(!showList)}
+          centerPosition={centerPosition}
+          establishments={establishments}
+        ></CardList>
+      )}
+
       <div>
         <ul>
           {establishments &&
