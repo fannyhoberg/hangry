@@ -4,12 +4,13 @@ import { Establishment, EstablishmentFormData } from "../types/Establishment.typ
 import EstablishmentForm from "../components/EstablishmentForm";
 import useAddFiles from "../hooks/useAddFiles";
 import useAuth from "../hooks/useAuth";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useGetEstablishMentByID from "../hooks/useGetEstablishMentByID";
 import { useEffect, useState } from "react";
 import { useUpdateEstablishment } from "../hooks/useUpdateEstablishment";
 import { establishmentCol } from "../services/firebase";
 import ImageCarousel from "../components/ImageCarousel";
+import useDeleteEstablishment from "../hooks/useDeleteEstablishment";
 
 
 const UpdateEstablishmentPage = () => {
@@ -19,6 +20,17 @@ const UpdateEstablishmentPage = () => {
     const { document: establishment, error: establishmentError, loading: loadingEstablishment } = useGetEstablishMentByID(id);
     const [initialValues, setInitialValues] = useState<Partial<Establishment> | null>(null)
     const { updateEstablishment, error: updateError, isLoading: updateLoading } = useUpdateEstablishment();
+    const { deleteDocument: deleteEstablishment, error: deleteError, isLoading: isLoadingDelete } = useDeleteEstablishment();
+    const navigate = useNavigate();
+
+    const handleDeleteEstablishment = async () => {
+        if (!id) {
+            return;
+        }
+
+        await deleteEstablishment(id, establishmentCol);
+        navigate("/admin-dashboard")
+    }
 
     const handleFormSubmit = async (data: EstablishmentFormData) => {
         const { photos, ...documentData } = data;
@@ -54,7 +66,11 @@ const UpdateEstablishmentPage = () => {
                 <div>{updateError}</div>
             )}
 
-            {fileUploadLoading || loadingEstablishment || updateLoading && (
+            {deleteError && (
+                <div>{deleteError}</div>
+            )}
+
+            {fileUploadLoading || loadingEstablishment || updateLoading || isLoadingDelete && (
                 <div>Loading...</div>
             )}
 
@@ -74,7 +90,13 @@ const UpdateEstablishmentPage = () => {
             {currentUser && initialValues &&
                 <Card className="mb-3 mt-4">
                     <Card.Body>
-                        <EstablishmentForm handleFormSubmit={handleFormSubmit} admin={currentUser} initialValues={initialValues} />
+                        <EstablishmentForm
+                            admin={currentUser}
+                            handleFormSubmit={handleFormSubmit}
+                            handleDelete={handleDeleteEstablishment}
+                            initialValues={initialValues}
+                            manageEstablishment
+                        />
                     </Card.Body>
                 </Card>
             }
