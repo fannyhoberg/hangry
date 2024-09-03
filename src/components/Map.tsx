@@ -1,7 +1,7 @@
 import { GoogleMap, Marker } from "@react-google-maps/api";
 import useGetEstablishmentsByCity from "../hooks/useGetEstablishmentsByCity";
 import useGetUserLocation from "../hooks/useGetUserLocation";
-import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Establishment, PositionCoords } from "../types/Establishment.types";
 import MarkerInfoWindow from "./map/MarkerInfoWindow";
@@ -17,7 +17,6 @@ const defaultCenter: PositionCoords = {
 };
 
 const Map = () => {
-  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [city, setCity] = useState(searchParams.get("city") || "Malmö");
   const { data: establishments, loading } = useGetEstablishmentsByCity(city);
@@ -28,8 +27,6 @@ const Map = () => {
   const [info, setInfo] = useState<Establishment | null>(null);
   const [centerPosition, setCenterPosition] =
     useState<PositionCoords>(defaultCenter);
-
-  const navigate = useNavigate();
 
   const myPositionIcon =
     "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
