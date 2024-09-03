@@ -1,6 +1,7 @@
 import { GoogleMap, Marker } from "@react-google-maps/api";
-import useGetEstablishments from "../hooks/useGetEstablishments";
+import useGetEstablishmentsByCity from "../hooks/useGetEstablishmentsByCity";
 import useGetUserLocation from "../hooks/useGetUserLocation";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Establishment, PositionCoords } from "../types/Establishment.types";
 import MarkerInfoWindow from "./map/MarkerInfoWindow";
@@ -16,7 +17,10 @@ const defaultCenter: PositionCoords = {
 };
 
 const Map = () => {
-  const { data: establishments, loading } = useGetEstablishments();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [city, setCity] = useState(searchParams.get("city") || "Malmö");
+  const { data: establishments, loading } = useGetEstablishmentsByCity(city);
   const { userLocation, isLoading } = useGetUserLocation();
   const [showInfoWindow, setShowInfoWindow] = useState(false);
   const [infoWindowPosition, setInfoWindowPosition] =
@@ -25,8 +29,7 @@ const Map = () => {
   const [centerPosition, setCenterPosition] =
     useState<PositionCoords>(defaultCenter);
 
-  console.log("Establishments", establishments);
-  console.log("userLocation", userLocation);
+  const navigate = useNavigate();
 
   const myPositionIcon =
     "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
@@ -63,6 +66,10 @@ const Map = () => {
     const selectedCity = event.target.value;
     const newCenter = locations[selectedCity as keyof typeof locations];
     setCenterPosition(newCenter);
+
+    // Update the city and URL params
+    setCity(selectedCity);
+    setSearchParams({ city: selectedCity });
   };
 
   useEffect(() => {
@@ -74,86 +81,91 @@ const Map = () => {
     }
   }, [userLocation]);
 
+  useEffect(() => {
+    // Update city from URL if it changes
+    const newCity = searchParams.get("city") || "Malmö";
+    if (city !== newCity) {
+      setCity(newCity);
+      const newCenter = locations[newCity as keyof typeof locations];
+
+      setCenterPosition(newCenter);
+    }
+  }, [searchParams]);
+
   if (loading || !centerPosition) {
     console.log("Loading data and location...");
     return <div>Loading map...</div>;
-  } else if (!loading && centerPosition && !isLoading) {
-    console.log("Data and location aquired, map rendering...");
-    return (
-      <>
-        <div>
-          <select
-            onChange={handleLocationChange}
-            style={{ padding: "8px", fontSize: "16px" }}
-          >
-            <option value="Min_position">Min position</option>
-            <option value="Lund">Lund</option>
-            <option value="Malmö">Malmö</option>
-            <option value="Eslöv">Eslöv</option>
-          </select>
-        </div>
-        <div className="map-wrapper">
-          {loading && console.log("Loading establishments...")}
-
-          {!loading && !isLoading && (
-            <GoogleMap
-              mapContainerStyle={containerStyle}
-              center={centerPosition ? centerPosition : defaultCenter}
-              zoom={14}
-            >
-              <>
-                {showInfoWindow && infoWindowPosition && info && (
-                  <MarkerInfoWindow
-                    handleClose={handleClose}
-                    position={infoWindowPosition}
-                    info={info}
-                  />
-                )}
-
-                {userLocation && (
-                  // Marker for user position - style differently
-                  <Marker
-                    // key={userLocation.timestamp}
-                    position={{
-                      lat: userLocation.coords.latitude,
-                      lng: userLocation.coords.longitude,
-                    }}
-                    icon={myPositionIcon}
-                  />
-                )}
-
-                {establishments &&
-                  establishments.map((establishment) => {
-                    const position: PositionCoords = {
-                      lat: establishment.geopoint.latitude,
-                      lng: establishment.geopoint.longitude,
-                    };
-
-                    return (
-                      <Marker
-                        onClick={() =>
-                          handleMarkerClick(position, establishment)
-                        }
-                        key={establishment._id}
-                        position={position}
-                      />
-                    );
-                  })}
-              </>
-            </GoogleMap>
-          )}
-        </div>
-        <div>
-          <ul>
-            {establishments &&
-              establishments.map((establishment) => (
-                <li key={establishment._id}>{establishment.name}</li>
-              ))}
-          </ul>
-        </div>
-      </>
-    );
   }
+
+  return (
+    <>
+      <div>
+        <select
+          onChange={handleLocationChange}
+          style={{ padding: "8px", fontSize: "16px" }}
+          value={city} // Ensure the select value is synchronized with state
+        >
+          <option value="Min_position">Min position</option>
+          <option value="Lund">Lund</option>
+          <option value="Malmö">Malmö</option>
+          <option value="Eslöv">Eslöv</option>
+        </select>
+      </div>
+      <div className="map-wrapper">
+        {!loading && !isLoading && (
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={centerPosition ? centerPosition : defaultCenter}
+            zoom={14}
+          >
+            <>
+              {showInfoWindow && infoWindowPosition && info && (
+                <MarkerInfoWindow
+                  handleClose={handleClose}
+                  position={infoWindowPosition}
+                  info={info}
+                />
+              )}
+
+              {userLocation && (
+                <Marker
+                  position={{
+                    lat: userLocation.coords.latitude,
+                    lng: userLocation.coords.longitude,
+                  }}
+                  icon={myPositionIcon}
+                />
+              )}
+
+              {establishments &&
+                establishments.map((establishment) => {
+                  const position: PositionCoords = {
+                    lat: establishment.geopoint.latitude,
+                    lng: establishment.geopoint.longitude,
+                  };
+
+                  return (
+                    <Marker
+                      onClick={() => handleMarkerClick(position, establishment)}
+                      key={establishment._id}
+                      position={position}
+                    />
+                  );
+                })}
+            </>
+          </GoogleMap>
+        )}
+      </div>
+      <div>
+        <ul>
+          {establishments &&
+            establishments.map((establishment) => (
+              <li key={establishment._id}>{establishment.name}</li>
+            ))}
+        </ul>
+      </div>
+    </>
+  );
 };
 
 export default Map;

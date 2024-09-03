@@ -35,7 +35,10 @@ function App() {
             <Route path="/update-profile" element={<UpdateProfilePage />} />
             <Route path="/update/:id" element={<UpdateEstablishmentPage />} />
             <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
-            <Route path="/manage-suggestions/:id" element={<ManageSuggestionsPage />} />
+            <Route
+              path="/manage-suggestions/:id"
+              element={<ManageSuggestionsPage />}
+            />
 
             <Route
               path="/add-establishment"
