@@ -48,17 +48,6 @@ const Map = () => {
     setInfoWindowPosition(null);
   };
 
-  // const handleDirectionsClick = () => {
-  //   const handleDirections = async (origin: PositionCoords, destination: PositionCoords) => {
-  //     const directions = await getDirections({ origin, destination });
-  //     console.log("directions", directions);
-  //   };
-
-  //   if (currentMarker) {
-  //     handleDirections(centerPosition, currentMarker);
-  //   }
-  // };
-
   const handleMarkerClick = (
     position: PositionCoords,
     establishment: Establishment
@@ -89,13 +78,6 @@ const Map = () => {
       });
     }
   }, [userLocation]);
-
-  // useEffect(() => {
-  //   if (currentMarker) {
-  //     const url = generateDirectionsURL(centerPosition, currentMarker);
-  //     setUrl(url);
-  //   }
-  // }, [currentMarker, centerPosition]);
 
   useEffect(() => {
     // Update city from URL if it changes
