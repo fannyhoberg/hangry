@@ -1,7 +1,5 @@
 import { useState } from "react";
-
 import "../../assets/scss/App.scss";
-
 import {
   ColumnDef,
   SortDirection,
@@ -11,20 +9,27 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { Link } from "react-router-dom";
 
-interface AdminDataTableProps<TData, TValue> {
+interface BaseData {
+  _id: string;
+}
+
+interface AdminDataTableProps<TData extends BaseData, TValue> {
   mainTitle: string;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-const AdminDataTable = <TData, TValue>({
+const AdminDataTable = <TData extends BaseData, TValue>({
   mainTitle,
   columns,
   data,
 }: AdminDataTableProps<TData, TValue>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingState>([]);
+
+  const toggleCollapse = () => setIsOpen(!isOpen);
 
   const sortingIndicators = {
     asc: "▼",
@@ -42,7 +47,18 @@ const AdminDataTable = <TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
   });
 
-  const toggleCollapse = () => setIsOpen(!isOpen);
+  const getLinkPath = (id: string) => {
+    switch (mainTitle) {
+      case "Establishments":
+        return `/update/${id}`;
+      case "Suggestions":
+        return `/manage-suggestions/${id}`;
+      case "Admins":
+        return null;
+      default:
+        return `/establishments`;
+    }
+  };
 
   return (
     <div className="collapsible-container">
@@ -88,9 +104,31 @@ const AdminDataTable = <TData, TValue>({
                   <tr key={row.id}>
                     {row.getVisibleCells().map((cell) => (
                       <td key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
+                        {cell.column.id === "name" && mainTitle !== "Admins" ? (
+                          getLinkPath(row.original._id) ? (
+                            // Only render a Link if mainTitle is NOT 'Admins'
+                            <Link
+                              to={getLinkPath(row.original._id) || ""}
+                              style={{ textDecoration: "none", color: "blue" }}
+                            >
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                              )}
+                            </Link>
+                          ) : (
+                            // Render plain text if no valid link path
+                            flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )
+                          )
+                        ) : (
+                          // Render plain text if mainTitle is 'Admins'
+                          flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )
                         )}
                       </td>
                     ))}
@@ -98,7 +136,6 @@ const AdminDataTable = <TData, TValue>({
                 ))}
               </tbody>
             </table>
-            <div className="h-4" />
           </div>
         </div>
       )}
