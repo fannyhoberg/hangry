@@ -15,7 +15,7 @@ const AdminDashboardPage = () => {
 
   const { data: users, loading: usersLoading } = useGetUsers();
 
-  console.log("Users data", users);
+  console.log("establishments data", establishments);
 
   const isValidUrl = (url: string | undefined): boolean => {
     if (!url) return false; // Handle undefined or empty strings
@@ -34,10 +34,6 @@ const AdminDashboardPage = () => {
     {
       accessorKey: "address",
       header: "Address",
-    },
-    {
-      accessorKey: "post_code",
-      header: "Post code",
     },
     {
       accessorKey: "city",
@@ -89,13 +85,6 @@ const AdminDashboardPage = () => {
           ></AdminDataTable>
         )}
 
-        {/* {establishments && !establishmentLoading && (
-          <CollapsibleSection
-            title="Establishments"
-            children={establishments}
-          ></CollapsibleSection>
-        )} */}
-
         {suggestions && !suggestionsLoading && (
           <AdminDataTable
             mainTitle={"Suggestions"}
@@ -103,13 +92,6 @@ const AdminDashboardPage = () => {
             data={suggestions}
           ></AdminDataTable>
         )}
-
-        {/* {suggestions && !suggestionsLoading && (
-          <CollapsibleSection
-            title="User Suggestions"
-            children={suggestions}
-          ></CollapsibleSection>
-        )} */}
 
         {users && !usersLoading && (
           <AdminDataTable

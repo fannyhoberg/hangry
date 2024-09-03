@@ -53,7 +53,8 @@ const AdminDataTable = <TData, TValue>({
       {isOpen && (
         <div className={`collapsible-content ${isOpen ? "open" : ""}`}>
           {/* Render the table */}
-          <div className="p-2">
+          <div className="table-container">
+            {" "}
             <table>
               <thead>
                 {table.getHeaderGroups().map((headerGroup) => (
