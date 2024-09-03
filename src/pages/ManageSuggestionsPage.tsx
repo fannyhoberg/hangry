@@ -55,12 +55,18 @@ const ManageSuggestionsPage = () => {
         // remove from suggestions collection
         await deleteSuggestion(id, suggestionsCol);
 
-        navigate("/admin-dashboard")
-
+        navigate("/admin-dashboard");
     }
 
-    const handleDeleteSuggestion = async (data: EstablishmentFormData) => {
+    const handleDeleteSuggestion = async () => {
+        if (!id) {
+            return;
+        }
+
         // delete suggestion in db
+        await deleteSuggestion(id, suggestionsCol);
+
+        navigate("/admin-dashboard");
     }
 
     return (
@@ -82,8 +88,12 @@ const ManageSuggestionsPage = () => {
                 <div>{addEstablishmentError}</div>
             )}
 
+            {deleteError && (
+                <div>{deleteError}</div>
+            )}
 
-            {fileUploadLoading || loadingSuggestion || isLoadingUpdate || loadingEstablishment && (
+
+            {fileUploadLoading || loadingSuggestion || isLoadingUpdate || loadingEstablishment || isLoadingDelete && (
                 <div>Loading...</div>
             )}
 
