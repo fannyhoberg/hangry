@@ -1,4 +1,4 @@
-import { Container } from "react-bootstrap";
+import { Container, Image } from "react-bootstrap";
 import useGetEstablishments from "../hooks/useGetEstablishments";
 import useGetSuggestions from "../hooks/useGetSuggestions";
 import useGetUsers from "../hooks/useGetUsers";
@@ -15,7 +15,10 @@ const AdminDashboardPage = () => {
 
   const { data: users, loading: usersLoading } = useGetUsers();
 
-  const isValidUrl = (url: string) => {
+  console.log("Users data", users);
+
+  const isValidUrl = (url: string | undefined): boolean => {
+    if (!url) return false; // Handle undefined or empty strings
     try {
       new URL(url);
       return true;
@@ -23,19 +26,18 @@ const AdminDashboardPage = () => {
       return false;
     }
   };
-
   const establishmentColumns: ColumnDef<Establishment>[] = [
     {
       accessorKey: "name",
       header: "Name",
     },
     {
-      accessorKey: "adress",
-      header: "Adress",
+      accessorKey: "address",
+      header: "Address",
     },
     {
-      accessorKey: "postalcode",
-      header: "Postal code",
+      accessorKey: "post_code",
+      header: "Post code",
     },
     {
       accessorKey: "city",
@@ -45,18 +47,22 @@ const AdminDashboardPage = () => {
 
   const usersColumns: ColumnDef<User>[] = [
     {
-      accessorKey: "photoUrl",
+      accessorKey: "photoUrls",
       header: "Photo",
       cell: (info) => {
-        const url = info.getValue() as string;
-        return isValidUrl(url) ? (
-          <img
+        const url = info.getValue() as string | undefined;
+        return url && isValidUrl(url) ? (
+          <Image
             src={url}
             alt="User Photo"
             style={{ width: "50px", height: "50px", borderRadius: "50%" }}
           />
         ) : (
-          url
+          <Image
+            src={"https://via.placeholder.com/200"}
+            alt="User Photo"
+            style={{ width: "50px", height: "50px", borderRadius: "50%" }}
+          />
         );
       },
     },

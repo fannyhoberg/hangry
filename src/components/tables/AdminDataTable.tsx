@@ -1,5 +1,4 @@
 import { useState } from "react";
-import BS_Table from "react-bootstrap/Table";
 
 import "../../assets/scss/App.scss";
 

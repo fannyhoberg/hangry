@@ -152,9 +152,7 @@ const UpdateProfilePage = () => {
                   <Form.Control
                     placeholder="Name"
                     type="text"
-                    {...register("name", {
-                      required: "Please enter your name.",
-                    })}
+                    {...register("name")}
                   />
                   {errors.name && (
                     <p className="invalid">
