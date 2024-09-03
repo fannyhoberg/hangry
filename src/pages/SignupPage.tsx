@@ -24,7 +24,7 @@ const SignupPage = () => {
   const { signup } = useAuth();
   const navigate = useNavigate();
 
-  const { addDocument, error, loading } = useAddDocument();
+  const { addDocument } = useAddDocument();
 
   // Password ref
   const passwordRef = useRef("");
