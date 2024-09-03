@@ -16,7 +16,7 @@ const ListCard: React.FC<ListCardProps> = ({ centerPosition, establishment }) =>
   const url = generateDirectionsURL(centerPosition, position);
 
   return (
-    <Card style={{ width: "18rem" }}>
+    <Card className="list-card">
       {establishment.photoUrls && <Card.Img variant="top" src={establishment.photoUrls[0]} />}
       <Card.Body>
         <Card.Title>{establishment.name}</Card.Title>

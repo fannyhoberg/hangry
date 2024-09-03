@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Establishment, PositionCoords } from "../types/Establishment.types";
 import MarkerInfoWindow from "./map/MarkerInfoWindow";
 import CardList from "./map/CardList";
+import { Button } from "react-bootstrap";
 
 const containerStyle = {
   width: "100%",
@@ -26,7 +27,7 @@ const Map = () => {
   const [infoWindowPosition, setInfoWindowPosition] = useState<PositionCoords | null>(null);
   const [info, setInfo] = useState<Establishment | null>(null);
   const [centerPosition, setCenterPosition] = useState<PositionCoords>(defaultCenter);
-  const [showList, setShowList] = useState<boolean>(true);
+  const [showList, setShowList] = useState<boolean>(false);
 
   const myPositionIcon =
     "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
@@ -103,6 +104,7 @@ const Map = () => {
           <option value="Malmö">Malmö</option>
           <option value="Eslöv">Eslöv</option>
         </select>
+        <Button onClick={() => setShowList(!showList)}>Visa lista</Button>
       </div>
       <div className="map-wrapper">
         {!loading && !isLoading && (
@@ -152,7 +154,11 @@ const Map = () => {
       </div>
 
       {establishments && showList && (
-        <CardList centerPosition={centerPosition} establishments={establishments}></CardList>
+        <CardList
+          handleButtonClick={() => setShowList(!showList)}
+          centerPosition={centerPosition}
+          establishments={establishments}
+        ></CardList>
       )}
 
       <div>
