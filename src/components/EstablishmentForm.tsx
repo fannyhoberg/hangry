@@ -4,14 +4,18 @@ import InputGroup from "react-bootstrap/InputGroup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { EstablishmentFormData } from "../types/Establishment.types";
 import { User } from "firebase/auth";
+import { useState } from "react";
 
 interface EstablishmentFormProps {
     handleFormSubmit: (data: EstablishmentFormData) => Promise<void>;
     admin?: User;
     initialValues?: Partial<EstablishmentFormData>;
+    manageSuggestions?: boolean
+    handleAddEstablishment?: (data: EstablishmentFormData) => Promise<void>;
+    handleDeleteSuggestion?: (data: EstablishmentFormData) => Promise<void>;
 }
 
-const EstablishmentForm: React.FC<EstablishmentFormProps> = ({ handleFormSubmit, admin, initialValues }) => {
+const EstablishmentForm: React.FC<EstablishmentFormProps> = ({ handleFormSubmit, admin, initialValues, manageSuggestions, handleAddEstablishment, handleDeleteSuggestion }) => {
     const {
         getValues,
         handleSubmit,
@@ -23,10 +27,36 @@ const EstablishmentForm: React.FC<EstablishmentFormProps> = ({ handleFormSubmit,
             ...initialValues
         }
     });
+    const [submissionType, setSubmissionType] = useState<string>("update")
 
-    const onFormSubmit: SubmitHandler<EstablishmentFormData> = (data) => {
-        handleFormSubmit(data);
-        reset();
+    const onFormSubmit: SubmitHandler<EstablishmentFormData> = async (data) => {
+
+        switch (submissionType) {
+            case "add":
+                if (handleAddEstablishment) {
+                    await handleAddEstablishment(data)
+                }
+                break;
+
+            case "delete":
+                if (handleDeleteSuggestion) {
+                    await handleDeleteSuggestion(data)
+                }
+                break;
+
+            case "update":
+                handleFormSubmit(data)
+                break;
+
+            default:
+                break;
+        }
+
+        if (!initialValues) {
+
+            reset();
+        }
+        // TOAST OR SOMETHING TO CONFIRM TO USER IT WAS SUCCESSFUL
     }
 
     return (
@@ -220,7 +250,38 @@ const EstablishmentForm: React.FC<EstablishmentFormProps> = ({ handleFormSubmit,
                 </Form.Group>
             )}
 
-            <Button type="submit">Submit</Button>
+            {!manageSuggestions &&
+                <Button type="submit">Submit</Button>
+            }
+            {manageSuggestions && (
+
+                <>
+
+                    <Button
+                        className="me-2"
+                        name="update"
+                        onClick={(e) => setSubmissionType(e.currentTarget.name)}
+                        type="submit"
+                    >Update</Button>
+
+                    <Button
+                        className="me-2"
+                        type="submit"
+                        name="add"
+                        onClick={(e) => setSubmissionType(e.currentTarget.name)}
+                        variant="success"
+                    >Add Establishment</Button>
+
+                    <Button
+                        className="me-2"
+                        name="delete"
+                        onClick={(e) => setSubmissionType(e.currentTarget.name)}
+                        type="submit"
+                        variant="danger"
+                    >Delete</Button>
+
+                </>
+            )}
         </Form>
     )
 }
