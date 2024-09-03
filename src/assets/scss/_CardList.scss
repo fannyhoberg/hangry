@@ -1,0 +1,10 @@
+.list-group-container {
+  position: fixed;
+  width: 100vw;
+  top: 0;
+  padding: 75px 10px 20px 10px;
+  z-index: 1000;
+  overflow: scroll;
+  height: 100vh;
+  background-color: #fff;
+}
