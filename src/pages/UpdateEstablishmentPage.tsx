@@ -9,6 +9,7 @@ import useGetEstablishMentByID from "../hooks/useGetEstablishMentByID";
 import { useEffect, useState } from "react";
 import { useUpdateEstablishment } from "../hooks/useUpdateEstablishment";
 import { establishmentCol } from "../services/firebase";
+import ImageCarousel from "../components/ImageCarousel";
 
 
 const UpdateEstablishmentPage = () => {
@@ -17,9 +18,7 @@ const UpdateEstablishmentPage = () => {
     const { uploadPhotos, error: fileUploadError, loading: fileUploadLoading } = useAddFiles()
     const { document: establishment, error: establishmentError, loading: loadingEstablishment } = useGetEstablishMentByID(id);
     const [initialValues, setInitialValues] = useState<Partial<Establishment> | null>(null)
-    const { updateDocument: updateEstablishment, error: updateError, isLoading: updateLoading } = useUpdateEstablishment();
-
-
+    const { updateEstablishment, error: updateError, isLoading: updateLoading } = useUpdateEstablishment();
 
     const handleFormSubmit = async (data: EstablishmentFormData) => {
         const { photos, ...documentData } = data;
@@ -59,14 +58,22 @@ const UpdateEstablishmentPage = () => {
                 <div>Loading...</div>
             )}
 
+            {establishment && (
+                <>
+                    <h1 className="h4 mb-3">Manage establishment: </h1>
+                    <h2 className="mb-4">{establishment.name}</h2>
+                </>
+            )}
+
             {/* IMAGE GALLERY WITH ESTABLISHMENT'S IMAGES
                 AND FUNCTIONALITY TO DELETE IMAGES */}
+            {establishment && establishment.photoUrls && (
+                <ImageCarousel establishmentName={establishment.name} photoUrls={establishment.photoUrls} />
+            )}
 
             {currentUser && initialValues &&
-                <Card className="mb-3 mt-5">
+                <Card className="mb-3 mt-4">
                     <Card.Body>
-                        <Card.Title className="mb-3">Add Establishment</Card.Title>
-
                         <EstablishmentForm handleFormSubmit={handleFormSubmit} admin={currentUser} initialValues={initialValues} />
                     </Card.Body>
                 </Card>
