@@ -8,13 +8,15 @@ import { useParams } from "react-router-dom";
 import useGetSuggestionByID from "../hooks/useGetSuggestionByID";
 import useUpdateSuggestion from "../hooks/useUpdateSuggestion";
 import { suggestionsCol } from "../services/firebase";
+import useAddEstablishment from "../hooks/useAddEstablishment";
 
 const ManageSuggestionsPage = () => {
-    const { id } = useParams()
-    const { currentUser } = useAuth()
-    const { uploadPhotos, error: fileUploadError, loading: fileUploadLoading } = useAddFiles()
+    const { id } = useParams();
+    const { currentUser } = useAuth();
+    const { uploadPhotos, error: fileUploadError, loading: fileUploadLoading } = useAddFiles();
     const { document: suggestion, error: suggestionError, loading: loadingSuggestion } = useGetSuggestionByID(id);
-    const { updateDocument: updateSuggestion } = useUpdateSuggestion()
+    const { updateDocument: updateSuggestion, error: updateError, isLoading: isLoadingUpdate } = useUpdateSuggestion();
+    const { addEstablishment, error: addEstablishmentError, loading: loadingEstablishment } = useAddEstablishment();
 
     const handleFormSubmit = async (data: EstablishmentFormData) => {
         const { photos, ...documentData } = data;
@@ -34,6 +36,20 @@ const ManageSuggestionsPage = () => {
 
     const handleAddEstablishment = async (data: EstablishmentFormData) => {
         // add to ESTABLISHMENT collection in db
+        const { photos, ...documentData } = data;
+
+        if (photos && photos.length > 0) {
+            const photoUrls = await uploadPhotos(photos, "test-photos");
+            documentData.photoUrls = photoUrls;
+        }
+
+        if (!id) {
+            return;
+        }
+
+        await addEstablishment(documentData);
+
+        // remove from suggestions collection
     }
 
     const handleDeleteSuggestion = async (data: EstablishmentFormData) => {
@@ -51,8 +67,16 @@ const ManageSuggestionsPage = () => {
                 <div>{fileUploadError}</div>
             )}
 
+            {updateError && (
+                <div>{updateError}</div>
+            )}
 
-            {fileUploadLoading || loadingSuggestion && (
+            {addEstablishmentError && (
+                <div>{addEstablishmentError}</div>
+            )}
+
+
+            {fileUploadLoading || loadingSuggestion || isLoadingUpdate || loadingEstablishment && (
                 <div>Loading...</div>
             )}
 
