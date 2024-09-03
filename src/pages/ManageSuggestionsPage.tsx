@@ -4,11 +4,12 @@ import { EstablishmentFormData } from "../types/Establishment.types";
 import EstablishmentForm from "../components/EstablishmentForm";
 import useAddFiles from "../hooks/useAddFiles";
 import useAuth from "../hooks/useAuth";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useGetSuggestionByID from "../hooks/useGetSuggestionByID";
 import useUpdateSuggestion from "../hooks/useUpdateSuggestion";
 import { suggestionsCol } from "../services/firebase";
 import useAddEstablishment from "../hooks/useAddEstablishment";
+import useDeleteSuggestion from "../hooks/useDeleteSuggestion";
 
 const ManageSuggestionsPage = () => {
     const { id } = useParams();
@@ -17,6 +18,8 @@ const ManageSuggestionsPage = () => {
     const { document: suggestion, error: suggestionError, loading: loadingSuggestion } = useGetSuggestionByID(id);
     const { updateDocument: updateSuggestion, error: updateError, isLoading: isLoadingUpdate } = useUpdateSuggestion();
     const { addEstablishment, error: addEstablishmentError, loading: loadingEstablishment } = useAddEstablishment();
+    const { deleteDocument: deleteSuggestion, error: deleteError, isLoading: isLoadingDelete } = useDeleteSuggestion();
+    const navigate = useNavigate();
 
     const handleFormSubmit = async (data: EstablishmentFormData) => {
         const { photos, ...documentData } = data;
@@ -50,6 +53,10 @@ const ManageSuggestionsPage = () => {
         await addEstablishment(documentData);
 
         // remove from suggestions collection
+        await deleteSuggestion(id, suggestionsCol);
+
+        navigate("/admin-dashboard")
+
     }
 
     const handleDeleteSuggestion = async (data: EstablishmentFormData) => {
