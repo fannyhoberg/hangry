@@ -29,10 +29,19 @@ const Map = () => {
   const [centerPosition, setCenterPosition] = useState<PositionCoords>(defaultCenter);
   const [showList, setShowList] = useState<boolean>(false);
 
-  console.log("User location", userLocation);
+  const coffeeIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+      <circle cx="20" cy="20" r="18" fill="#5EA38A" stroke="#004F32" stroke-width="3" />
+      <text x="20" y="27" font-size="25" text-anchor="middle" fill="#004F32" font-family="Arial" font-weight="bold">&#x2615;</text>
+    </svg>
+  `)}`;
 
-  const myPositionIcon =
-    "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+  const restaurantIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+      <circle cx="20" cy="20" r="18" fill="#5EA38A" stroke="#004F32" stroke-width="3" />
+      <text x="20" y="27" font-size="24" text-anchor="middle" fill="#004F32" font-family="Arial" font-weight="bold">&#127790;</text>
+    </svg>
+  `)}`;
 
   const locations = {
     MyPosition: userLocation
@@ -137,7 +146,7 @@ const Map = () => {
                     lat: userLocation.geolocation.coords.latitude,
                     lng: userLocation.geolocation.coords.longitude,
                   }}
-                  icon={myPositionIcon}
+                  // icon={myPositionIcon}
                 />
               )}
 
@@ -153,6 +162,9 @@ const Map = () => {
                       onClick={() => handleMarkerClick(position, establishment)}
                       key={establishment._id}
                       position={position}
+                      icon={
+                        establishment.category[0] === "restaurant" ? restaurantIcon : coffeeIcon
+                      }
                     />
                   );
                 })}
