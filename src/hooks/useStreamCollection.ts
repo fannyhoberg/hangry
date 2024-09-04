@@ -37,7 +37,7 @@ const useStreamCollection = <T>(
     return unsubscribe;
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [colRef]);
+  }, [colRef, ...queryConstraints]);
 
   return {
     data,
