@@ -13,6 +13,7 @@ import useAddFiles from "../hooks/useAddFiles";
 import useGetUserDoc from "../hooks/useGetUserDoc";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
+import { Alert } from "react-bootstrap";
 
 const UpdateProfilePage = () => {
   const [error, setError] = useState<string | null>(null);
@@ -38,6 +39,7 @@ const UpdateProfilePage = () => {
     handleSubmit,
     register,
     watch,
+    reset,
     formState: { errors },
   } = useForm<UpdateProfileType>({
     defaultValues: {
@@ -81,9 +83,9 @@ const UpdateProfilePage = () => {
           } catch (err) {
             setIsError(true);
             if (err instanceof Error) {
-              setError(err.message)
+              setError(err.message);
             } else {
-              setError("Something went wrong trying to update profile")
+              setError("Something went wrong trying to update profile");
             }
             return;
           }
@@ -113,16 +115,13 @@ const UpdateProfilePage = () => {
     setIsSubmitting(false);
 
     setIsUpdated(true);
+    reset();
   };
 
   return (
     <Container className="py-3 center-y">
-      {loading && (
-        <div className="loading">Loading...</div>
-      )}
-      {isError && error && (
-        <div className="error">{error}</div>
-      )}
+      {loading && <div className="loading">Loading...</div>}
+      {isError && error && <div className="error">{error}</div>}
 
       <Row>
         <Col md={{ span: 6, offset: 3 }}>
@@ -229,7 +228,12 @@ const UpdateProfilePage = () => {
                     })}
                   />
                   {errors.confirmPassword && (
-                    <p>{errors.confirmPassword.message || "Invalid value"}</p>
+                    // <p style={{ color: "red" }}>
+                    //   {errors.confirmPassword.message || "Invalid value"}
+                    // </p>
+                    <Alert variant={"warning"}>
+                      {errors.confirmPassword.message || "Invalid value"}
+                    </Alert>
                   )}
                 </Form.Group>
 
@@ -237,8 +241,8 @@ const UpdateProfilePage = () => {
                   {isSubmitting ? "Updating profile..." : "Save"}
                 </Button>
 
-                {isUpdated && !isError && (
-                  <p style={{ color: "green" }}>Profile is now updated</p>
+                {!isSubmitting && isUpdated && !isError && (
+                  <Alert variant={"success"}>Profile is now updated</Alert>
                 )}
               </Form>
             </Card.Body>
