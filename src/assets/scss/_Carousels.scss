@@ -1,3 +1,5 @@
+// ListCard carousel
+
 .carousel.slide {
   height: 20rem;
   overflow: hidden;
@@ -17,4 +19,21 @@
   object-fit: cover;
   min-height: 100%;
   min-width: 100%;
+}
+
+// UpdateEstablishment Carousel
+#admin-carousel {
+  height: 35vh;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+
+@media screen and (min-width: 768px) {
+  #admin-carousel {
+    height: 55vh;
+
+    .carousel-slide {
+      height: 55vh;
+    }
+  }
 }

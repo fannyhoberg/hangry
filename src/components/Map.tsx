@@ -47,9 +47,9 @@ const Map = () => {
     () => ({
       MyPosition: userLocation
         ? {
-          lat: userLocation.geolocation.coords.latitude,
-          lng: userLocation.geolocation.coords.longitude,
-        }
+            lat: userLocation.geolocation.coords.latitude,
+            lng: userLocation.geolocation.coords.longitude,
+          }
         : defaultCenter,
       Lund: { lat: 55.7046601, lng: 13.1910073 },
       Malmö: { lat: 55.6052931, lng: 13.0001566 },
@@ -93,6 +93,7 @@ const Map = () => {
         lng: userLocation.geolocation.coords.longitude,
       });
     }
+    console.log("centerposition", centerPosition)
   }, [userLocation]);
 
   useEffect(() => {
@@ -104,8 +105,15 @@ const Map = () => {
   }, [searchParams, city, locations]);
 
   const onLoad = useCallback((mapInstance: google.maps.Map) => {
-    setMap(mapInstance);  // Save map instance in state
+    setMap(mapInstance); // Save map instance in state
   }, []);
+
+  const userPosition = userLocation ? {
+    lat: userLocation.geolocation.coords.latitude,
+    lng: userLocation.geolocation.coords.longitude,
+  } : undefined
+
+  console.log("User position", userPosition)
 
   if (loading || !centerPosition) {
     console.log("Loading data and location...");
@@ -122,11 +130,18 @@ const Map = () => {
           <option value="Eslöv">Eslöv</option>
         </select>
         {establishments && establishments.length > 0 && (
-          <Button onClick={() => setShowList(!showList)}>Visa lista</Button>
+          <Button onClick={() => setShowList(!showList)}>
+            {showList ? "Stäng lista" : "Visa lista"}
+          </Button>
         )}
       </div>
       <div className="map-wrapper">
-        <GoogleMap mapContainerStyle={containerStyle} center={centerPosition} zoom={14} onLoad={onLoad}>
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={centerPosition}
+          zoom={14}
+          onLoad={onLoad}
+        >
           <>
             {showInfoWindow && infoWindowPosition && info && (
               <MarkerInfoWindow
@@ -135,6 +150,7 @@ const Map = () => {
                 info={info}
                 map={map}
                 position={infoWindowPosition}
+                userLocation={userPosition}
               />
             )}
 
@@ -165,8 +181,8 @@ const Map = () => {
                       establishment.category.includes("bar")
                         ? barIcon
                         : establishment.category.includes("restaurant")
-                        ? restaurantIcon
-                        : coffeeIcon
+                          ? restaurantIcon
+                          : coffeeIcon
                     }
                   />
                 );

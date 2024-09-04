@@ -1,11 +1,10 @@
 @import "bootstrap/scss/bootstrap";
 @import "Map.scss";
-@import "ImageCarousel";
 @import "Tables.scss";
 @import "CardList";
 @import "Buttons";
 @import "InfoWindow";
-@import "CardCarousel";
+@import "Carousels";
 
 @import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap");
 
@@ -81,6 +80,11 @@ nav {
 
 .collapsible-content.open {
   max-height: 1000px; /* Sätt tillräckligt stor max-höjd för att rymma innehållet */
+}
+
+.circle-img {
+  aspect-ratio: 1;
+  object-fit: cover;
 }
 
 @media screen and (min-width: 768px) {

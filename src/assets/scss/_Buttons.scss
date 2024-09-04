@@ -3,6 +3,9 @@
   border: none;
   border-radius: 0.6rem;
   height: 2.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .btn:hover {
