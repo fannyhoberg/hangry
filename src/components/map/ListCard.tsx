@@ -1,3 +1,4 @@
+import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { Establishment, PositionCoords } from "../../types/Establishment.types";
 import { generateDirectionsURL } from "../../services/directionsAPI";
@@ -6,11 +7,12 @@ import CardCarousel from "./CardCarousel";
 type ListCardProps = {
   centerPosition: PositionCoords;
   establishment: Establishment;
+  handleClose?: () => void;
 };
 
 const noImageUrl = "https://fl-1.cdn.flockler.com/embed/no-image.svg";
 
-const ListCard: React.FC<ListCardProps> = ({ centerPosition, establishment }) => {
+const ListCard: React.FC<ListCardProps> = ({ centerPosition, establishment, handleClose }) => {
   const position: PositionCoords = {
     lat: establishment.geopoint.latitude,
     lng: establishment.geopoint.longitude,
@@ -20,6 +22,9 @@ const ListCard: React.FC<ListCardProps> = ({ centerPosition, establishment }) =>
 
   return (
     <Card className="list-card">
+      {handleClose && (
+        <Button onClick={handleClose} className="info-window-close">X</Button>
+      )}
       {/* <div className="card-img-wrapper">
         {establishment.photoUrls ? (
           <Card.Img variant="top" src={establishment.photoUrls[0]} />
@@ -28,6 +33,7 @@ const ListCard: React.FC<ListCardProps> = ({ centerPosition, establishment }) =>
         )}
       </div> */}
       <div className="card-img-wrapper">
+
         {establishment.photoUrls ? (
           <CardCarousel
             establishmentName={establishment.name}
