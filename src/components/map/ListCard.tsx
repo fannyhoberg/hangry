@@ -83,7 +83,7 @@ const ListCard: React.FC<ListCardProps> = ({
         )}
         {establishment.facebook && (
           <a href={establishment.facebook} className="btn btn-primary" target="_blank">
-            <i className="fa-brands fa-instagram"></i>
+            <i className="fa-brands fa-facebook"></i>
           </a>
         )}
       </Card.Footer>
