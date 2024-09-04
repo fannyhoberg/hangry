@@ -15,17 +15,24 @@ const CardList: React.FC<CardListProps> = ({
   centerPosition,
   city,
 }) => {
+  const sortedEstablishments = establishments.sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
+
   return (
     <div className="list-wrapper">
       <div className="list-top">
         <h2>{city}</h2>
-        <Button onClick={handleButtonClick} className="close-button btn-secondary">
+        <Button
+          onClick={handleButtonClick}
+          className="close-button btn-secondary"
+        >
           X
         </Button>
       </div>
 
       <div className="list-group-container">
-        {establishments.map((establishment) => (
+        {sortedEstablishments.map((establishment) => (
           <ListCard
             key={establishment._id}
             establishment={establishment}
