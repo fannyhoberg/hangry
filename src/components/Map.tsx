@@ -37,6 +37,7 @@ const Map = () => {
   const [info, setInfo] = useState<Establishment | null>(null);
   const [centerPosition, setCenterPosition] = useState<PositionCoords>(defaultCenter);
   const [showList, setShowList] = useState<boolean>(false);
+  const [map, setMap] = useState<google.maps.Map | null>(null);
 
   const coffeeIcon = useMemo(() => createIcon("☕"), []);
   const restaurantIcon = useMemo(() => createIcon("🍕"), []);
@@ -46,9 +47,9 @@ const Map = () => {
     () => ({
       MyPosition: userLocation
         ? {
-            lat: userLocation.geolocation.coords.latitude,
-            lng: userLocation.geolocation.coords.longitude,
-          }
+          lat: userLocation.geolocation.coords.latitude,
+          lng: userLocation.geolocation.coords.longitude,
+        }
         : defaultCenter,
       Lund: { lat: 55.7046601, lng: 13.1910073 },
       Malmö: { lat: 55.6052931, lng: 13.0001566 },
@@ -102,6 +103,10 @@ const Map = () => {
     }
   }, [searchParams, city, locations]);
 
+  const onLoad = useCallback((mapInstance: google.maps.Map) => {
+    setMap(mapInstance);  // Save map instance in state
+  }, []);
+
   if (loading || !centerPosition) {
     console.log("Loading data and location...");
     return <div>Loading map...</div>;
@@ -121,14 +126,15 @@ const Map = () => {
         )}
       </div>
       <div className="map-wrapper">
-        <GoogleMap mapContainerStyle={containerStyle} center={centerPosition} zoom={14}>
+        <GoogleMap mapContainerStyle={containerStyle} center={centerPosition} zoom={14} onLoad={onLoad}>
           <>
             {showInfoWindow && infoWindowPosition && info && (
               <MarkerInfoWindow
                 handleClose={handleClose}
-                position={infoWindowPosition}
-                info={info}
                 centerPosition={centerPosition}
+                info={info}
+                map={map}
+                position={infoWindowPosition}
               />
             )}
 

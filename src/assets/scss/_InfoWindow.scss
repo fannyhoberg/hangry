@@ -1,0 +1,26 @@
+.info-window-close {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+}
+
+// info window mobile view
+.info-window-mobile {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  padding: 20px;
+}
+
+// info window desktop view
+.info-window-desktop {
+  padding: 10px;
+  border-radius: 8px;
+  width: 30vw;
+  height: auto;
+  transform: translate(-50%, -50%);
+}
