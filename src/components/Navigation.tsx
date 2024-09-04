@@ -36,12 +36,7 @@ const Navigation = () => {
             <NavDropdown
               title={
                 userPhotoUrl ? (
-                  <Image
-                    src={userPhotoUrl}
-                    height={30}
-                    width={30}
-                    roundedCircle
-                  />
+                  <Image src={userPhotoUrl} height={30} width={30} roundedCircle />
                 ) : (
                   userName || userEmail
                 )
