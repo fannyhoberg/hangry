@@ -34,3 +34,8 @@ export type Admin = {
   photoUrls?: string;
   email: string;
 };
+
+export type UserLocation = {
+  geolocation: GeolocationPosition;
+  cityName: string;
+};
