@@ -52,10 +52,8 @@ const UpdateProfilePage = () => {
 
   const { data: userData, loading } = useGetUserDoc(currentUser?.uid);
 
-  // Make sure userData is not empty and has the expected structure
   const userId = userData && userData.length > 0 ? userData[0]._id : null;
 
-  // Create the document reference using the extracted _id
   const userDocRef = userId ? doc(db, "users", userId) : null;
 
   const onUpdate: SubmitHandler<UpdateProfileType> = async (data) => {
@@ -146,9 +144,7 @@ const UpdateProfilePage = () => {
                     {...register("photos")}
                   />
                   {errors.photos && (
-                    <Alert variant="warning">
-                      {errors.photos.message || "Invalid"}
-                    </Alert>
+                    <Alert variant="warning">{errors.photos.message || "Invalid"}</Alert>
                   )}
                 </Form.Group>
 
@@ -161,9 +157,7 @@ const UpdateProfilePage = () => {
                     {...register("name")}
                   />
                   {errors.name && (
-                    <Alert variant="warning">
-                      {errors.name.message || "Invalid value"}
-                    </Alert>
+                    <Alert variant="warning">{errors.name.message || "Invalid value"}</Alert>
                   )}
                 </Form.Group>
 
@@ -178,9 +172,7 @@ const UpdateProfilePage = () => {
                     })}
                   />
                   {errors.email && (
-                    <Alert variant="warning">
-                      {errors.email.message || "Invalid value"}
-                    </Alert>
+                    <Alert variant="warning">{errors.email.message || "Invalid value"}</Alert>
                   )}
                 </Form.Group>
 
@@ -197,9 +189,7 @@ const UpdateProfilePage = () => {
                     })}
                   />
                   {errors.password && (
-                    <Alert variant="warning">
-                      {errors.password.message || "Invalid value"}
-                    </Alert>
+                    <Alert variant="warning">{errors.password.message || "Invalid value"}</Alert>
                   )}
                   <Form.Text>At least 6 characters</Form.Text>
                 </Form.Group>
@@ -234,9 +224,7 @@ const UpdateProfilePage = () => {
                   {isSubmitting ? "Updating profile..." : "Save"}
                 </Button>
 
-                {isUpdated && !isError && (
-                  <Alert variant="success">Profile is now updated</Alert>
-                )}
+                {isUpdated && !isError && <Alert variant="success">Profile is now updated</Alert>}
               </Form>
             </Card.Body>
           </Card>

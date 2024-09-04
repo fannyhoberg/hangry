@@ -26,7 +26,6 @@ const SignupPage = () => {
 
   const { addDocument } = useAddDocument();
 
-  // Password ref
   const passwordRef = useRef("");
   passwordRef.current = watch("password");
 
@@ -34,11 +33,9 @@ const SignupPage = () => {
     setIsSubmitting(true);
 
     try {
-      // Registrera användaren med Firebase Authentication
       const userCredential = await signup(data.email, data.password);
       const user = userCredential.user;
 
-      // Lägg till användaren i Firestore-databasen
       await addDocument(usersCol, {
         _id: user.uid,
         email: user.email || "",
@@ -77,9 +74,7 @@ const SignupPage = () => {
                     })}
                   />
                   {errors.email && (
-                    <p className="invalid">
-                      {errors.email.message || "Invalid value"}
-                    </p>
+                    <p className="invalid">{errors.email.message || "Invalid value"}</p>
                   )}
                 </Form.Group>
 
@@ -97,9 +92,7 @@ const SignupPage = () => {
                     })}
                   />
                   {errors.password && (
-                    <p className="invalid">
-                      {errors.password.message || "Invalid value"}
-                    </p>
+                    <p className="invalid">{errors.password.message || "Invalid value"}</p>
                   )}
                   <Form.Text>At least 6 characters</Form.Text>
                 </Form.Group>
@@ -117,8 +110,7 @@ const SignupPage = () => {
                       },
                       validate: (value) => {
                         return (
-                          value === passwordRef.current ||
-                          "The passwords does not match, try again"
+                          value === passwordRef.current || "The passwords does not match, try again"
                         );
                       },
                     })}

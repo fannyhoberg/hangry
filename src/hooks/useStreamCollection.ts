@@ -13,14 +13,10 @@ const useStreamCollection = <T>(
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<T[] | null>(null);
 
-  // subscribe to data
   useEffect(() => {
-    // query reference
     const queryRef = query(colRef, ...queryConstraints);
 
-    // subscribe
     const unsubscribe = onSnapshot(queryRef, (snapshot) => {
-      console.log("got snapshot");
 
       const data = snapshot.docs.map((doc) => {
         return {
@@ -33,7 +29,6 @@ const useStreamCollection = <T>(
       setLoading(false);
     });
 
-    // unsubscribe as cleanup
     return unsubscribe;
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

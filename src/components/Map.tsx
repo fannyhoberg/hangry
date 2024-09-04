@@ -93,7 +93,6 @@ const Map = () => {
         lng: userLocation.geolocation.coords.longitude,
       });
     }
-    console.log("centerposition", centerPosition);
   }, [userLocation]);
 
   useEffect(() => {
@@ -115,10 +114,7 @@ const Map = () => {
       }
     : undefined;
 
-  console.log("User position", userPosition);
-
   if (loading || !centerPosition) {
-    console.log("Loading data and location...");
     return <div>Loading map...</div>;
   }
 

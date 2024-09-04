@@ -35,11 +35,9 @@ const useGetUserLocation = () => {
   }, [userLocationCoords]);
 
   useEffect(() => {
-    console.log(navigator.geolocation);
     setIsLoading(true);
 
     const success = (position: GeolocationPosition) => {
-      // If success, update state to hold geolocation of user:
       setUserLocationCoords(position);
       setIsLoading(false);
     };
@@ -50,13 +48,12 @@ const useGetUserLocation = () => {
     };
 
     navigator.geolocation.getCurrentPosition(success, error, {
-      maximumAge: 10000, // Do not refetch information if current info is less than 10 sec fresh
-      timeout: 10000, // Stop request if it doesn't work after 10 sec
+      maximumAge: 10000,
+      timeout: 10000,
     });
   }, []);
 
   useEffect(() => {
-    // When userLocationCoords are set, perform reverse geocoding
     if (userLocationCoords) {
       reverseGeocoding();
     }

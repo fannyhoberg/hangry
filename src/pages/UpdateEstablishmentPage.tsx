@@ -84,9 +84,6 @@ const UpdateEstablishmentPage = () => {
         </>
       )}
 
-      {/* IMAGE GALLERY WITH ESTABLISHMENT'S IMAGES
-                AND FUNCTIONALITY TO DELETE IMAGES */}
-
       {establishment && establishment.photoUrls && (
         <ImageCarousel establishmentName={establishment.name} photoUrls={establishment.photoUrls} />
       )}

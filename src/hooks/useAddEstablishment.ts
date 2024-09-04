@@ -7,10 +7,8 @@ import { newEstablishmentCol } from "../services/firebase";
 
 const useAddEstablishment = () => {
   const { addDocument, error, loading } = useAddDocument();
-  // use when updating as well :)
 
   const addEstablishment = async (data: EstablishmentTextData) => {
-    // Get geopoint from address
     const payload = await getGeopoint(data.address, data.city);
 
     if (!payload) {
@@ -23,7 +21,6 @@ const useAddEstablishment = () => {
       place_id: payload.place_id,
     };
 
-    // Add to DB incl geopoint
     addDocument(newEstablishmentCol, newEstablishmentObj);
   };
   return { addEstablishment, error, loading };
