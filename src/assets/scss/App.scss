@@ -16,6 +16,15 @@ nav {
   z-index: 1001;
 }
 
+#header-logo-wrapper {
+  width: 100%;
+  padding: 2rem;
+
+  #header-logo {
+    width: 100%;
+  }
+}
+
 .navbar-nav {
   .dropdown-menu {
     left: auto;
