@@ -12,7 +12,7 @@ const Navigation = () => {
     <Navbar bg="light" expand="lg" className="bg-body-tertiary">
       <Container>
         <Navbar.Brand as={Link} to="/" className="logo">
-          Hangry
+          Map
         </Navbar.Brand>
 
         {!currentUser && (
