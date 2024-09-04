@@ -24,13 +24,26 @@ const Map = () => {
   const { data: establishments, loading } = useGetEstablishmentsByCity(city);
   const { userLocation, isLoading } = useGetUserLocation();
   const [showInfoWindow, setShowInfoWindow] = useState(false);
-  const [infoWindowPosition, setInfoWindowPosition] = useState<PositionCoords | null>(null);
+  const [infoWindowPosition, setInfoWindowPosition] =
+    useState<PositionCoords | null>(null);
   const [info, setInfo] = useState<Establishment | null>(null);
-  const [centerPosition, setCenterPosition] = useState<PositionCoords>(defaultCenter);
+  const [centerPosition, setCenterPosition] =
+    useState<PositionCoords>(defaultCenter);
   const [showList, setShowList] = useState<boolean>(false);
 
-  const myPositionIcon =
-    "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+  const coffeeIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+      <circle cx="20" cy="20" r="18" fill="#5EA38A" stroke="#004F32" stroke-width="3" />
+      <text x="20" y="27" font-size="25" text-anchor="middle" fill="#004F32" font-family="Arial" font-weight="bold">&#x2615;</text>
+    </svg>
+  `)}`;
+
+  const restaurantIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+      <circle cx="20" cy="20" r="18" fill="#5EA38A" stroke="#004F32" stroke-width="3" />
+      <text x="20" y="27" font-size="24" text-anchor="middle" fill="#004F32" font-family="Arial" font-weight="bold">&#127790;</text>
+    </svg>
+  `)}`;
 
   const locations = {
     Min_position: userLocation
@@ -49,13 +62,18 @@ const Map = () => {
     setInfoWindowPosition(null);
   };
 
-  const handleMarkerClick = (position: PositionCoords, establishment: Establishment) => {
+  const handleMarkerClick = (
+    position: PositionCoords,
+    establishment: Establishment
+  ) => {
     setInfo(establishment);
     setShowInfoWindow(true);
     setInfoWindowPosition(position);
   };
 
-  const handleLocationChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleLocationChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const selectedCity = event.target.value;
     const newCenter = locations[selectedCity as keyof typeof locations];
     setCenterPosition(newCenter);
@@ -130,7 +148,7 @@ const Map = () => {
                     lat: userLocation.coords.latitude,
                     lng: userLocation.coords.longitude,
                   }}
-                  icon={myPositionIcon}
+                  // icon={myPositionIcon}
                 />
               )}
 
@@ -146,6 +164,11 @@ const Map = () => {
                       onClick={() => handleMarkerClick(position, establishment)}
                       key={establishment._id}
                       position={position}
+                      icon={
+                        establishment.category[0] === "restaurant"
+                          ? restaurantIcon
+                          : coffeeIcon
+                      }
                     />
                   );
                 })}
