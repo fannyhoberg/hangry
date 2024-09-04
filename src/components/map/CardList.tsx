@@ -14,17 +14,19 @@ const CardList: React.FC<CardListProps> = ({
   centerPosition,
 }) => {
   return (
-    <div className="list-group-container">
-      <Button onClick={handleButtonClick} className="close-button">
-        Stäng
+    <div className="list-wrapper">
+      <Button onClick={handleButtonClick} className="close-button btn-secondary">
+        X
       </Button>
-      {establishments.map((establishment) => (
-        <ListCard
-          key={establishment._id}
-          establishment={establishment}
-          centerPosition={centerPosition}
-        />
-      ))}
+      <div className="list-group-container">
+        {establishments.map((establishment) => (
+          <ListCard
+            key={establishment._id}
+            establishment={establishment}
+            centerPosition={centerPosition}
+          />
+        ))}
+      </div>
     </div>
   );
 };

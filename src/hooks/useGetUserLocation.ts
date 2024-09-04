@@ -1,11 +1,38 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { getCityFromCoords } from "../services/geocodingAPI";
+import { UserLocation } from "../types/User.types";
 
 const useGetUserLocation = () => {
-  const [userLocation, setUserLocation] = useState<GeolocationPosition | null>(
-    null
-  );
+  const [userLocationCoords, setUserLocationCoords] =
+    useState<GeolocationPosition | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
+
+  const reverseGeocoding = useCallback(async () => {
+    if (!userLocationCoords) return;
+
+    setIsLoading(true);
+
+    if (userLocationCoords) {
+      try {
+        const city = await getCityFromCoords(
+          userLocationCoords.coords.latitude,
+          userLocationCoords.coords.longitude
+        );
+        if (city) {
+          setUserLocation({ geolocation: userLocationCoords, cityName: city });
+        }
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Error getting city from coords");
+        }
+      }
+    }
+    setIsLoading(false);
+  }, [userLocationCoords]);
 
   useEffect(() => {
     console.log(navigator.geolocation);
@@ -13,7 +40,7 @@ const useGetUserLocation = () => {
 
     const success = (position: GeolocationPosition) => {
       // If success, update state to hold geolocation of user:
-      setUserLocation(position);
+      setUserLocationCoords(position);
       setIsLoading(false);
     };
 
@@ -27,6 +54,13 @@ const useGetUserLocation = () => {
       timeout: 10000, // Stop request if it doesn't work after 10 sec
     });
   }, []);
+
+  useEffect(() => {
+    // When userLocationCoords are set, perform reverse geocoding
+    if (userLocationCoords) {
+      reverseGeocoding();
+    }
+  }, [reverseGeocoding, userLocationCoords]);
 
   return {
     userLocation,
