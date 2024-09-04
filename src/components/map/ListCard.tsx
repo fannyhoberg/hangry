@@ -7,6 +7,8 @@ type ListCardProps = {
   establishment: Establishment;
 };
 
+const noImageUrl = "https://fl-1.cdn.flockler.com/embed/no-image.svg";
+
 const ListCard: React.FC<ListCardProps> = ({ centerPosition, establishment }) => {
   const position: PositionCoords = {
     lat: establishment.geopoint.latitude,
@@ -17,14 +19,28 @@ const ListCard: React.FC<ListCardProps> = ({ centerPosition, establishment }) =>
 
   return (
     <Card className="list-card">
-      {establishment.photoUrls && <Card.Img variant="top" src={establishment.photoUrls[0]} />}
+      <div className="card-img-wrapper">
+        {establishment.photoUrls ? (
+          <Card.Img variant="top" src={establishment.photoUrls[0]} />
+        ) : (
+          <Card.Img variant="top" src={noImageUrl} />
+        )}
+      </div>
+
       <Card.Body>
         <Card.Title>{establishment.name}</Card.Title>
-        <Card.Text>{establishment.category.join(", ").toUpperCase()}</Card.Text>
+        <Card.Subtitle>{establishment.category.join(", ").toUpperCase()}</Card.Subtitle>
+        {establishment.description && <Card.Text>{establishment.description}</Card.Text>}
+
+        <Card.Text>
+          {establishment.address}, {establishment.city}
+        </Card.Text>
+      </Card.Body>
+      <Card.Footer>
         <a href={url} className="btn btn-primary" target="_blank">
           Vägbeskrivning
         </a>
-      </Card.Body>
+      </Card.Footer>
     </Card>
   );
 };
