@@ -1,6 +1,7 @@
 import Card from "react-bootstrap/Card";
 import { Establishment, PositionCoords } from "../../types/Establishment.types";
 import { generateDirectionsURL } from "../../services/directionsAPI";
+import CardCarousel from "./CardCarousel";
 
 type ListCardProps = {
   centerPosition: PositionCoords;
@@ -19,9 +20,19 @@ const ListCard: React.FC<ListCardProps> = ({ centerPosition, establishment }) =>
 
   return (
     <Card className="list-card">
-      <div className="card-img-wrapper">
+      {/* <div className="card-img-wrapper">
         {establishment.photoUrls ? (
           <Card.Img variant="top" src={establishment.photoUrls[0]} />
+        ) : (
+          <Card.Img variant="top" src={noImageUrl} />
+        )}
+      </div> */}
+      <div className="card-img-wrapper">
+        {establishment.photoUrls ? (
+          <CardCarousel
+            establishmentName={establishment.name}
+            photoUrls={establishment.photoUrls}
+          ></CardCarousel>
         ) : (
           <Card.Img variant="top" src={noImageUrl} />
         )}

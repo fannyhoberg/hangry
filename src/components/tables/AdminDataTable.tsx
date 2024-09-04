@@ -79,19 +79,13 @@ const AdminDataTable = <TData extends BaseData, TValue>({
                       <th key={header.id}>
                         {header.isPlaceholder ? null : (
                           <div
-                            className={
-                              header.column.getCanSort() ? "cursor-pointer" : ""
-                            }
+                            className={header.column.getCanSort() ? "cursor-pointer" : ""}
                             onClick={header.column.getToggleSortingHandler()}
                           >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                            {flexRender(header.column.columnDef.header, header.getContext())}
 
-                            {sortingIndicators[
-                              header.column.getIsSorted() as SortDirection
-                            ] ?? null}
+                            {sortingIndicators[header.column.getIsSorted() as SortDirection] ??
+                              null}
                           </div>
                         )}
                       </th>
@@ -107,28 +101,16 @@ const AdminDataTable = <TData extends BaseData, TValue>({
                         {cell.column.id === "name" && mainTitle !== "Admins" ? (
                           getLinkPath(row.original._id) ? (
                             // Only render a Link if mainTitle is NOT 'Admins'
-                            <Link
-                              to={getLinkPath(row.original._id) || ""}
-                              style={{ textDecoration: "none", color: "blue" }}
-                            >
-                              {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext()
-                              )}
+                            <Link to={getLinkPath(row.original._id) || ""} className="table-link">
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
                             </Link>
                           ) : (
                             // Render plain text if no valid link path
-                            flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )
+                            flexRender(cell.column.columnDef.cell, cell.getContext())
                           )
                         ) : (
                           // Render plain text if mainTitle is 'Admins'
-                          flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )
+                          flexRender(cell.column.columnDef.cell, cell.getContext())
                         )}
                       </td>
                     ))}

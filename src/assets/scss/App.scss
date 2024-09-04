@@ -3,17 +3,36 @@
 @import "ImageCarousel";
 @import "Tables.scss";
 @import "CardList";
+@import "Buttons";
+@import "CardCarousel";
+
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap");
 
 #App {
+  font-family: "Inconsolata", sans-serif;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   box-sizing: border-box;
+  background-color: #f9f8f4;
+}
+
+.bg-body-tertiary {
+  background-color: #f9f8f4 !important;
 }
 
 nav {
   position: relative;
   z-index: 1001;
+}
+
+#header-logo-wrapper {
+  width: 100%;
+  padding: 2rem;
+
+  #header-logo {
+    width: 100%;
+  }
 }
 
 .navbar-nav {
@@ -56,4 +75,17 @@ nav {
 
 .collapsible-content.open {
   max-height: 1000px; /* Sätt tillräckligt stor max-höjd för att rymma innehållet */
+}
+
+@media screen and (min-width: 768px) {
+  #header-logo-wrapper {
+    width: 100%;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+
+    #header-logo {
+      width: 40%;
+    }
+  }
 }

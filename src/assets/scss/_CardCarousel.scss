@@ -1,0 +1,18 @@
+.carousel.slide {
+  height: 20rem;
+  overflow: hidden;
+}
+
+.carousel-slide {
+  height: 20rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel-img {
+  object-fit: cover;
+  min-height: 100%;
+  min-width: 100%;
+}

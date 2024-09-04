@@ -8,11 +8,20 @@
   height: 35vh;
   overflow: hidden;
 
-  .carousel-image {
-    display: block;
+  .carousel-slide {
+    height: 100%;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    object-fit: cover;
+    .carousel-image {
+      display: block;
+      height: 100%;
+      width: 100%;
+
+      object-fit: cover;
+    }
   }
 }
 

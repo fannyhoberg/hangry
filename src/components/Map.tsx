@@ -33,11 +33,9 @@ const Map = () => {
   const { data: establishments, loading } = useGetEstablishmentsByCity(city);
   const { userLocation } = useGetUserLocation();
   const [showInfoWindow, setShowInfoWindow] = useState(false);
-  const [infoWindowPosition, setInfoWindowPosition] =
-    useState<PositionCoords | null>(null);
+  const [infoWindowPosition, setInfoWindowPosition] = useState<PositionCoords | null>(null);
   const [info, setInfo] = useState<Establishment | null>(null);
-  const [centerPosition, setCenterPosition] =
-    useState<PositionCoords>(defaultCenter);
+  const [centerPosition, setCenterPosition] = useState<PositionCoords>(defaultCenter);
   const [showList, setShowList] = useState<boolean>(false);
 
   const coffeeIcon = useMemo(() => createIcon("☕"), []);
@@ -79,11 +77,7 @@ const Map = () => {
       const newCenter = locations[value as keyof typeof locations];
       setCenterPosition(newCenter);
       const newCity =
-        value === "MyPosition"
-          ? userLocation
-            ? userLocation.cityName
-            : "Malmö"
-          : value;
+        value === "MyPosition" ? (userLocation ? userLocation.cityName : "Malmö") : value;
       setCity(newCity);
       setSearchParams({ city: newCity });
     },
@@ -115,11 +109,8 @@ const Map = () => {
 
   return (
     <>
-      <div>
-        <select
-          onChange={handleLocationChange}
-          style={{ padding: "8px", fontSize: "16px" }}
-        >
+      <div className="map-top">
+        <select onChange={handleLocationChange} className="city-select">
           <option value="MyPosition">My position</option>
           <option value="Lund">Lund</option>
           <option value="Malmö">Malmö</option>
@@ -130,11 +121,7 @@ const Map = () => {
         )}
       </div>
       <div className="map-wrapper">
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={centerPosition}
-          zoom={14}
-        >
+        <GoogleMap mapContainerStyle={containerStyle} center={centerPosition} zoom={14}>
           <>
             {showInfoWindow && infoWindowPosition && info && (
               <MarkerInfoWindow
