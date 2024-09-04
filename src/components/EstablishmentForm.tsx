@@ -43,8 +43,8 @@ const EstablishmentForm: React.FC<EstablishmentFormProps> = ({
   const managePage = manageEstablishment
     ? true
     : manageSuggestions
-    ? true
-    : false;
+      ? true
+      : false;
 
   const onFormSubmit: SubmitHandler<EstablishmentFormData> = async (data) => {
     setIsSuccess(false);
@@ -271,7 +271,7 @@ const EstablishmentForm: React.FC<EstablishmentFormProps> = ({
           autoComplete="url"
           className="mb-2"
           id="url"
-          placeholder="establishment.com"
+          placeholder="https://www.establishment.com"
           size="sm"
           type="url"
           {...register("website")}
@@ -285,6 +285,17 @@ const EstablishmentForm: React.FC<EstablishmentFormProps> = ({
             placeholder="username"
             type="text"
             {...register("instagram")}
+          />
+        </InputGroup>
+        <InputGroup className="mb-2" size="sm">
+          <InputGroup.Text>FB</InputGroup.Text>
+          <Form.Control
+            aria-label="facebook"
+            autoComplete="off"
+            id="facebook"
+            placeholder="https://www.facebook.com/my-restaurant"
+            type="text"
+            {...register("facebook")}
           />
         </InputGroup>
       </Form.Group>
