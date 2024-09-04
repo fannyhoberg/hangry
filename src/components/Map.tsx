@@ -96,6 +96,7 @@ const Map = () => {
 
   useEffect(() => {
     if (userLocation) {
+      setCity(userLocation.cityName);
       setCenterPosition({
         lat: userLocation.geolocation.coords.latitude,
         lng: userLocation.geolocation.coords.longitude,
