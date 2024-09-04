@@ -93,6 +93,7 @@ const Map = () => {
         lng: userLocation.geolocation.coords.longitude,
       });
     }
+    console.log("centerposition", centerPosition)
   }, [userLocation]);
 
   useEffect(() => {
@@ -106,6 +107,13 @@ const Map = () => {
   const onLoad = useCallback((mapInstance: google.maps.Map) => {
     setMap(mapInstance);  // Save map instance in state
   }, []);
+
+  const userPosition = userLocation ? {
+    lat: userLocation.geolocation.coords.latitude,
+    lng: userLocation.geolocation.coords.longitude,
+  } : undefined
+
+  console.log("User position", userPosition)
 
   if (loading || !centerPosition) {
     console.log("Loading data and location...");
@@ -135,6 +143,7 @@ const Map = () => {
                 info={info}
                 map={map}
                 position={infoWindowPosition}
+                userLocation={userPosition}
               />
             )}
 
@@ -165,8 +174,8 @@ const Map = () => {
                       establishment.category.includes("bar")
                         ? barIcon
                         : establishment.category.includes("restaurant")
-                        ? restaurantIcon
-                        : coffeeIcon
+                          ? restaurantIcon
+                          : coffeeIcon
                     }
                   />
                 );

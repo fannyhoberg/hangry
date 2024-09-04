@@ -5,6 +5,7 @@ export type Establishment = {
   name: string;
   address: string;
   geopoint: GeoPoint;
+  place_id: string;
   post_code: number;
   city: string;
   description?: string;
@@ -25,7 +26,8 @@ export type PositionCoords = {
 
 export type NewEstablishment = Omit<Establishment, "_id">;
 
-export type EstablishmentTextData = Omit<NewEstablishment, "geopoint">;
+type EstablishmentWOPlaceId = Omit<NewEstablishment, "place_id">;
+export type EstablishmentTextData = Omit<EstablishmentWOPlaceId, "geopoint">;
 
 export interface EstablishmentFormData extends EstablishmentTextData {
   photos: FileList;

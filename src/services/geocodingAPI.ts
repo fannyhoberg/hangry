@@ -10,6 +10,7 @@ interface GeopointRes {
         lng: number;
       };
     };
+    place_id: string;
   }[];
   status: string;
 }
@@ -27,11 +28,13 @@ interface ReverseGeocodingRes {
 
 // want address component where type is postal_town
 
-export const getGeopoint = async (address: string) => {
+export const getGeopoint = async (address: string, city: string) => {
   const res = await axios.get<GeopointRes>(
-    `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${API_KEY}`
+    `https://maps.googleapis.com/maps/api/geocode/json?address=${address},${city}&key=${API_KEY}`
   );
-  return res.data.results[0].geometry.location;
+  const coords = res.data.results[0].geometry.location;
+  const place_id = res.data.results[0].place_id;
+  return { coords, place_id };
 };
 
 export const getCityFromCoords = async (lat: number, lng: number) => {

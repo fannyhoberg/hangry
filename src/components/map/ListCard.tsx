@@ -8,17 +8,22 @@ type ListCardProps = {
   centerPosition: PositionCoords;
   establishment: Establishment;
   handleClose?: () => void;
+  userPosition?: PositionCoords;
 };
 
 const noImageUrl = "https://fl-1.cdn.flockler.com/embed/no-image.svg";
 
-const ListCard: React.FC<ListCardProps> = ({ centerPosition, establishment, handleClose }) => {
-  const position: PositionCoords = {
+const ListCard: React.FC<ListCardProps> = ({ centerPosition, establishment, handleClose, userPosition }) => {
+  const origin = userPosition ?? centerPosition;
+
+  const destinationCoords: PositionCoords = {
     lat: establishment.geopoint.latitude,
     lng: establishment.geopoint.longitude,
   };
 
-  const url = generateDirectionsURL(centerPosition, position);
+  const url = establishment.place_id
+    ? generateDirectionsURL(origin, destinationCoords, establishment.place_id)
+    : generateDirectionsURL(origin, destinationCoords);
 
   return (
     <Card className="list-card">
