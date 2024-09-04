@@ -160,6 +160,7 @@ const UpdateProfilePage = () => {
                 <Form.Group controlId="username" className="mb-3">
                   <Form.Label>Name</Form.Label>
                   <Form.Control
+                    autoComplete="name"
                     placeholder="Name"
                     type="text"
                     {...register("name")}
@@ -174,6 +175,7 @@ const UpdateProfilePage = () => {
                 <Form.Group controlId="email" className="mb-3">
                   <Form.Label>Email</Form.Label>
                   <Form.Control
+                    autoComplete="email"
                     placeholder="my-email@email.com"
                     type="email"
                     {...register("email", {
