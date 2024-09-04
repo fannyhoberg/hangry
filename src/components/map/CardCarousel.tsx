@@ -8,7 +8,7 @@ interface CarouselProps {
 
 const CardCarousel: React.FC<CarouselProps> = ({ establishmentName, photoUrls }) => {
   return (
-    <Carousel fade>
+    <Carousel fade interval={null}>
       {photoUrls &&
         photoUrls.map((url) => (
           <Carousel.Item key={url}>

@@ -8,6 +8,7 @@ const HomePage = () => {
       <div>
         <div id="header-logo-wrapper">
           <Image src={HangryLogo} id="header-logo" />
+          <h4>Find your next meal, NOW!</h4>
         </div>
         <Map />
       </div>
