@@ -10,7 +10,6 @@ const LogoutPage = () => {
   useEffect(() => {
     const logOutUser = async () => {
       await logout();
-      console.log("You are being logged out");
 
       await new Promise((r) => setTimeout(r, 2000));
 

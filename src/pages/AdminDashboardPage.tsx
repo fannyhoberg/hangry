@@ -8,14 +8,10 @@ import { Establishment } from "../types/Establishment.types";
 import { User } from "../types/User.types";
 
 const AdminDashboardPage = () => {
-  const { data: establishments, loading: establishmentLoading } =
-    useGetEstablishments();
-  const { data: suggestions, loading: suggestionsLoading } =
-    useGetSuggestions();
+  const { data: establishments, loading: establishmentLoading } = useGetEstablishments();
+  const { data: suggestions, loading: suggestionsLoading } = useGetSuggestions();
 
   const { data: users, loading: usersLoading } = useGetUsers();
-
-  console.log("establishments data", establishments);
 
   const isValidUrl = (url: string | undefined): boolean => {
     if (!url) return false; // Handle undefined or empty strings
@@ -102,11 +98,7 @@ const AdminDashboardPage = () => {
         )}
 
         {users && !usersLoading && (
-          <AdminDataTable
-            mainTitle={"Admins"}
-            columns={usersColumns}
-            data={users}
-          ></AdminDataTable>
+          <AdminDataTable mainTitle={"Admins"} columns={usersColumns} data={users}></AdminDataTable>
         )}
       </Container>
     </>

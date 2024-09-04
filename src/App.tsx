@@ -14,7 +14,6 @@ import UpdateEstablishmentPage from "./pages/UpdateEstablishmentPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import ManageSuggestionsPage from "./pages/ManageSuggestionsPage";
-import { ToastContainer } from "react-toastify";
 
 const google_api_key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -24,7 +23,6 @@ function App() {
       <Navigation />
       <LoadScriptNext googleMapsApiKey={google_api_key}>
         <Routes>
-          {/* <Route path="*" element={<NotFoundPage />} /> */}
           <Route path="/" element={<HomePage />} />
           <Route path="/suggestions" element={<AddSuggestionsPage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -35,31 +33,13 @@ function App() {
             <Route path="/update-profile" element={<UpdateProfilePage />} />
             <Route path="/update/:id" element={<UpdateEstablishmentPage />} />
             <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
-            <Route
-              path="/manage-suggestions/:id"
-              element={<ManageSuggestionsPage />}
-            />
+            <Route path="/manage-suggestions/:id" element={<ManageSuggestionsPage />} />
 
-            <Route
-              path="/add-establishment"
-              element={<AddEstablishmentPage />}
-            />
+            <Route path="/add-establishment" element={<AddEstablishmentPage />} />
           </Route>
           <Route path="/*" element={<NotFoundPage />} />
         </Routes>
       </LoadScriptNext>
-      <ToastContainer
-        position="bottom-right" // Justera positionen om det behövs
-        autoClose={5000} // Automatisk stängning efter 5 sekunder
-        hideProgressBar={false} // Visa progress bar
-        newestOnTop={false} // Visa nyaste toast högst upp
-        closeOnClick
-        rtl={false} // Höger-till-vänster text
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark" // Använd mörkt tema om det är för mörkt
-      />{" "}
     </div>
   );
 }

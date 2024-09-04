@@ -13,13 +13,7 @@ const AddEstablishmentPage = () => {
     error: establishmentError,
     loading: establishmentLoading,
   } = useAddEstablishment();
-  const {
-    uploadPhotos,
-    error: fileUploadError,
-    loading: fileUploadLoading,
-  } = useAddFiles();
-
-  // validate address to ensure it is possible to geocode!
+  const { uploadPhotos, error: fileUploadError, loading: fileUploadLoading } = useAddFiles();
 
   const handleFormSubmit = async (data: EstablishmentFormData) => {
     const { photos, ...documentData } = data;
@@ -43,10 +37,7 @@ const AddEstablishmentPage = () => {
           <Card.Body>
             <Card.Title className="mb-3">Add Establishment</Card.Title>
 
-            <EstablishmentForm
-              handleFormSubmit={handleFormSubmit}
-              admin={currentUser}
-            />
+            <EstablishmentForm handleFormSubmit={handleFormSubmit} admin={currentUser} />
           </Card.Body>
         </Card>
       )}

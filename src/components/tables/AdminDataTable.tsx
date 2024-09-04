@@ -100,16 +100,13 @@ const AdminDataTable = <TData extends BaseData, TValue>({
                       <td key={cell.id}>
                         {cell.column.id === "name" && mainTitle !== "Admins" ? (
                           getLinkPath(row.original._id) ? (
-                            // Only render a Link if mainTitle is NOT 'Admins'
                             <Link to={getLinkPath(row.original._id) || ""} className="table-link">
                               {flexRender(cell.column.columnDef.cell, cell.getContext())}
                             </Link>
                           ) : (
-                            // Render plain text if no valid link path
                             flexRender(cell.column.columnDef.cell, cell.getContext())
                           )
                         ) : (
-                          // Render plain text if mainTitle is 'Admins'
                           flexRender(cell.column.columnDef.cell, cell.getContext())
                         )}
                       </td>

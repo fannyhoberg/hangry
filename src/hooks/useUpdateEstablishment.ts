@@ -14,7 +14,6 @@ export const useUpdateEstablishment = () => {
     colRef: CollectionReference<Establishment>,
     data: EstablishmentTextData
   ) => {
-    // Get geopoint from address
     const payload = await getGeopoint(data.address, data.city);
 
     if (!payload) {
@@ -24,6 +23,7 @@ export const useUpdateEstablishment = () => {
     const updatedEstablishmentObj = {
       ...data,
       geopoint: new GeoPoint(payload.coords.lat, payload.coords.lng),
+      place_id: payload.place_id,
     };
 
     updateDocument(id, colRef, updatedEstablishmentObj);

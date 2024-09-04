@@ -9,12 +9,7 @@ import {
   updatePassword,
   updateProfile,
 } from "firebase/auth";
-import React, {
-  PropsWithChildren,
-  createContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { PropsWithChildren, createContext, useEffect, useState } from "react";
 import { auth } from "../services/firebase";
 
 // Define the shape of the Auth context
@@ -88,8 +83,6 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
       throw new Error("Unauthorised, you are not logged in");
     }
 
-    console.log("Inside auth setDisplayName");
-
     return updateProfile(currentUser, {
       displayName: name,
     });
@@ -109,14 +102,10 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
       setCurrentUser(user);
 
       if (user) {
-        // a user is logged in
-
         setUserEmail(user.email);
         setUserName(user.displayName);
         setUserPhotoUrl(user.photoURL);
       } else {
-        // no user logged in
-
         setUserEmail(null);
         setUserName(null);
         setUserPhotoUrl(null);

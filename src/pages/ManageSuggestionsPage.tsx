@@ -17,11 +17,7 @@ const ManageSuggestionsPage = () => {
   const { id } = useParams();
   const [deleteItem, setDeleteItem] = useState(false);
   const { currentUser } = useAuth();
-  const {
-    uploadPhotos,
-    error: fileUploadError,
-    loading: fileUploadLoading,
-  } = useAddFiles();
+  const { uploadPhotos, error: fileUploadError, loading: fileUploadLoading } = useAddFiles();
   const {
     document: suggestion,
     error: suggestionError,
@@ -56,12 +52,10 @@ const ManageSuggestionsPage = () => {
       return;
     }
 
-    // updateSuggestionDoc in db
     await updateSuggestion(id, suggestionsCol, documentData);
   };
 
   const handleAddEstablishment = async (data: EstablishmentFormData) => {
-    // add to ESTABLISHMENT collection in db
     const { photos, ...documentData } = data;
 
     if (photos && photos.length > 0) {
@@ -75,7 +69,6 @@ const ManageSuggestionsPage = () => {
 
     await addEstablishment(documentData);
 
-    // remove from suggestions collection
     await deleteSuggestion(id, suggestionsCol);
 
     navigate("/admin-dashboard");
@@ -86,7 +79,6 @@ const ManageSuggestionsPage = () => {
       return;
     }
 
-    // delete suggestion in db
     await deleteSuggestion(id, suggestionsCol);
     setDeleteItem(true);
     navigate("/admin-dashboard");
@@ -98,9 +90,7 @@ const ManageSuggestionsPage = () => {
         fileUploadError ||
         updateError ||
         addEstablishmentError ||
-        (deleteError && (
-          <Alert variant="warning">Something went wrong...</Alert>
-        ))}
+        (deleteError && <Alert variant="warning">Something went wrong...</Alert>)}
 
       {fileUploadLoading ||
         loadingSuggestion ||
@@ -113,9 +103,7 @@ const ManageSuggestionsPage = () => {
       {currentUser && suggestion && (
         <Card className="mb-3 mt-5">
           <Card.Body>
-            <Card.Title className="mb-3">
-              Manage suggestion: {suggestion.name}
-            </Card.Title>
+            <Card.Title className="mb-3">Manage suggestion: {suggestion.name}</Card.Title>
 
             <EstablishmentForm
               admin={currentUser}

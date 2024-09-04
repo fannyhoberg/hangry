@@ -6,7 +6,6 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { useState } from "react";
-// import { NewEstablishment } from "../types/Establishment.types";
 
 export const useAddDocument = () => {
   const [error, setError] = useState<string | false>(false);

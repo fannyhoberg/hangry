@@ -26,8 +26,6 @@ interface ReverseGeocodingRes {
   status: string;
 }
 
-// want address component where type is postal_town
-
 export const getGeopoint = async (address: string, city: string) => {
   const res = await axios.get<GeopointRes>(
     `https://maps.googleapis.com/maps/api/geocode/json?address=${address},${city}&key=${API_KEY}`

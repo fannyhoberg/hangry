@@ -28,7 +28,6 @@ const LoginPage = () => {
 
     try {
       await login(data.email, data.password);
-      console.log("You are logged in");
       navigate("/");
     } catch (err) {
       setIsError(true);
@@ -64,9 +63,7 @@ const LoginPage = () => {
                     })}
                   />
                   {errors.email && (
-                    <p className="invalid">
-                      {errors.email.message || "Invalid value"}
-                    </p>
+                    <p className="invalid">{errors.email.message || "Invalid value"}</p>
                   )}
                 </Form.Group>
 
@@ -79,20 +76,14 @@ const LoginPage = () => {
                       required: "Please enter your password",
                     })}
                   />
-                  {errors.password && (
-                    <p>{errors.password.message || "Invalid value"}</p>
-                  )}
+                  {errors.password && <p>{errors.password.message || "Invalid value"}</p>}
                 </Form.Group>
 
                 <Button disabled={isSubmitting} type="submit" variant="primary">
                   {isSubmitting ? "Logging in..." : "Log in"}
                 </Button>
 
-                {isError && (
-                  <p style={{ color: "red" }}>
-                    Email or password incorrect, try again.
-                  </p>
-                )}
+                {isError && <p style={{ color: "red" }}>Email or password incorrect, try again.</p>}
               </Form>
             </Card.Body>
           </Card>
