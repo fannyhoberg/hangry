@@ -39,7 +39,6 @@ const UpdateProfilePage = () => {
     handleSubmit,
     register,
     watch,
-    reset,
     formState: { errors },
   } = useForm<UpdateProfileType>({
     defaultValues: {
@@ -47,8 +46,6 @@ const UpdateProfilePage = () => {
       name: userName ?? "",
     },
   });
-
-  console.log("userPhotoUrl", userPhotoUrl);
 
   const passwordRef = useRef("");
   passwordRef.current = watch("password");
@@ -115,7 +112,6 @@ const UpdateProfilePage = () => {
     setIsSubmitting(false);
 
     setIsUpdated(true);
-    reset();
   };
 
   return (
@@ -196,14 +192,14 @@ const UpdateProfilePage = () => {
                     {...register("password", {
                       minLength: {
                         message: "Enter at least 6 characters",
-                        value: 3,
+                        value: 6,
                       },
                     })}
                   />
                   {errors.password && (
-                    <p className="invalid">
+                    <Alert variant="warning">
                       {errors.password.message || "Invalid value"}
-                    </p>
+                    </Alert>
                   )}
                   <Form.Text>At least 6 characters</Form.Text>
                 </Form.Group>
@@ -216,7 +212,7 @@ const UpdateProfilePage = () => {
                     {...register("confirmPassword", {
                       minLength: {
                         message: "Enter at least 6 characters",
-                        value: 3,
+                        value: 6,
                       },
                       validate: (value) => {
                         return (
@@ -228,10 +224,7 @@ const UpdateProfilePage = () => {
                     })}
                   />
                   {errors.confirmPassword && (
-                    // <p style={{ color: "red" }}>
-                    //   {errors.confirmPassword.message || "Invalid value"}
-                    // </p>
-                    <Alert variant={"warning"}>
+                    <Alert variant="warning">
                       {errors.confirmPassword.message || "Invalid value"}
                     </Alert>
                   )}
@@ -241,8 +234,8 @@ const UpdateProfilePage = () => {
                   {isSubmitting ? "Updating profile..." : "Save"}
                 </Button>
 
-                {!isSubmitting && isUpdated && !isError && (
-                  <Alert variant={"success"}>Profile is now updated</Alert>
+                {isUpdated && !isError && (
+                  <Alert variant="success">Profile is now updated</Alert>
                 )}
               </Form>
             </Card.Body>
