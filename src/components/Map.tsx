@@ -120,11 +120,7 @@ const Map = () => {
   return (
     <>
       <div>
-        <select
-          onChange={handleLocationChange}
-          style={{ padding: "8px", fontSize: "16px" }}
-          value={city}
-        >
+        <select onChange={handleLocationChange} style={{ padding: "8px", fontSize: "16px" }}>
           <option value="MyPosition">My position</option>
           <option value="Lund">Lund</option>
           <option value="Malmö">Malmö</option>
