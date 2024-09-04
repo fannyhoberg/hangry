@@ -11,7 +11,7 @@ const useAddEstablishment = () => {
 
   const addEstablishment = async (data: EstablishmentTextData) => {
     // Get geopoint from address
-    const payload = await getGeopoint(data.address);
+    const payload = await getGeopoint(data.address, data.city);
 
     if (!payload) {
       throw new Error("No payload");
@@ -19,7 +19,8 @@ const useAddEstablishment = () => {
 
     const newEstablishmentObj = {
       ...data,
-      geopoint: new GeoPoint(payload.lat, payload.lng),
+      geopoint: new GeoPoint(payload.coords.lat, payload.coords.lng),
+      place_id: payload.place_id,
     };
 
     // Add to DB incl geopoint

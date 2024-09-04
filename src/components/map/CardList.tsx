@@ -8,6 +8,7 @@ type CardListProps = {
   establishments: Establishment[];
   centerPosition: PositionCoords;
   city: string;
+  userLocation?: PositionCoords;
 };
 
 const CardList: React.FC<CardListProps> = ({
@@ -15,6 +16,7 @@ const CardList: React.FC<CardListProps> = ({
   establishments,
   centerPosition,
   city,
+  userLocation
 }) => {
   const sortedEstablishments = establishments.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -33,6 +35,7 @@ const CardList: React.FC<CardListProps> = ({
             key={establishment._id}
             establishment={establishment}
             centerPosition={centerPosition}
+            userPosition={userLocation}
           />
         ))}
       </div>

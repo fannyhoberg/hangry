@@ -9,6 +9,7 @@ interface MarkerInfoWindowProps {
   info: Establishment;
   map: google.maps.Map | null;
   position: PositionCoords;
+  userLocation?: PositionCoords
 }
 
 const MarkerInfoWindow: React.FC<MarkerInfoWindowProps> = ({
@@ -17,6 +18,7 @@ const MarkerInfoWindow: React.FC<MarkerInfoWindowProps> = ({
   info,
   map,
   position,
+  userLocation
 }) => {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -39,12 +41,12 @@ const MarkerInfoWindow: React.FC<MarkerInfoWindowProps> = ({
     <>
       {isMobile ? (
         <div className="info-window-mobile">
-          <ListCard centerPosition={centerPosition} establishment={info} handleClose={handleClose} />
+          <ListCard centerPosition={centerPosition} establishment={info} handleClose={handleClose} userPosition={userLocation} />
         </div>
       ) : (
         <OverlayView position={position} mapPaneName={OverlayView.FLOAT_PANE}>
           <div className="info-window-desktop">
-            <ListCard centerPosition={centerPosition} establishment={info} handleClose={handleClose} />
+            <ListCard centerPosition={centerPosition} establishment={info} handleClose={handleClose} userPosition={userLocation} />
           </div>
         </OverlayView>
 
