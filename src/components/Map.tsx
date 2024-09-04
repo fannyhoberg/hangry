@@ -29,15 +29,17 @@ const Map = () => {
   const [centerPosition, setCenterPosition] = useState<PositionCoords>(defaultCenter);
   const [showList, setShowList] = useState<boolean>(false);
 
+  console.log("User location", userLocation);
+
   const myPositionIcon =
     "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
 
   const locations = {
-    Min_position: userLocation
+    MyPosition: userLocation
       ? {
-          lat: userLocation.coords.latitude,
-          lng: userLocation.coords.longitude,
-        }
+        lat: userLocation.geolocation.coords.latitude,
+        lng: userLocation.geolocation.coords.longitude,
+      }
       : defaultCenter,
     Lund: { lat: 55.7046601, lng: 13.1910073 },
     Malmö: { lat: 55.6052931, lng: 13.0001566 },
@@ -56,20 +58,28 @@ const Map = () => {
   };
 
   const handleLocationChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCity = event.target.value;
+    const value = event.target.value;
+
+    const selectedCity = value;
     const newCenter = locations[selectedCity as keyof typeof locations];
     setCenterPosition(newCenter);
+    console.log(selectedCity)
 
     // Update the city and URL params
-    setCity(selectedCity);
-    setSearchParams({ city: selectedCity });
+    const newCity = value === "MyPosition"
+      ? userLocation
+        ? userLocation.cityName
+        : "Malmö"
+      : value
+    setCity(newCity);
+    setSearchParams({ city: newCity });
   };
 
   useEffect(() => {
     if (userLocation) {
       setCenterPosition({
-        lat: userLocation.coords.latitude,
-        lng: userLocation.coords.longitude,
+        lat: userLocation.geolocation.coords.latitude,
+        lng: userLocation.geolocation.coords.longitude,
       });
     }
   }, [userLocation]);
@@ -96,9 +106,9 @@ const Map = () => {
         <select
           onChange={handleLocationChange}
           style={{ padding: "8px", fontSize: "16px" }}
-          value={city} // Ensure the select value is synchronized with state
+        // value="Choose location" // Ensure the select value is synchronized with state
         >
-          <option value="Min_position">Min position</option>
+          <option value="MyPosition">My position</option>
           <option value="Lund">Lund</option>
           <option value="Malmö">Malmö</option>
           <option value="Eslöv">Eslöv</option>
@@ -127,8 +137,8 @@ const Map = () => {
               {userLocation && (
                 <Marker
                   position={{
-                    lat: userLocation.coords.latitude,
-                    lng: userLocation.coords.longitude,
+                    lat: userLocation.geolocation.coords.latitude,
+                    lng: userLocation.geolocation.coords.longitude,
                   }}
                   icon={myPositionIcon}
                 />
