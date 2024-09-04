@@ -13,6 +13,7 @@ import useAddFiles from "../hooks/useAddFiles";
 import useGetUserDoc from "../hooks/useGetUserDoc";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
+import { Alert } from "react-bootstrap";
 
 const UpdateProfilePage = () => {
   const [error, setError] = useState<string | null>(null);
@@ -45,8 +46,6 @@ const UpdateProfilePage = () => {
       name: userName ?? "",
     },
   });
-
-  console.log("userPhotoUrl", userPhotoUrl);
 
   const passwordRef = useRef("");
   passwordRef.current = watch("password");
@@ -81,9 +80,9 @@ const UpdateProfilePage = () => {
           } catch (err) {
             setIsError(true);
             if (err instanceof Error) {
-              setError(err.message)
+              setError(err.message);
             } else {
-              setError("Something went wrong trying to update profile")
+              setError("Something went wrong trying to update profile");
             }
             return;
           }
@@ -117,12 +116,8 @@ const UpdateProfilePage = () => {
 
   return (
     <Container className="py-3 center-y">
-      {loading && (
-        <div className="loading">Loading...</div>
-      )}
-      {isError && error && (
-        <div className="error">{error}</div>
-      )}
+      {loading && <div className="loading">Loading...</div>}
+      {isError && error && <div className="error">{error}</div>}
 
       <Row>
         <Col md={{ span: 6, offset: 3 }}>
@@ -151,9 +146,9 @@ const UpdateProfilePage = () => {
                     {...register("photos")}
                   />
                   {errors.photos && (
-                    <p className="invalid">
-                      {errors.photos.message || "Invalid value"}
-                    </p>
+                    <Alert variant="warning">
+                      {errors.photos.message || "Invalid"}
+                    </Alert>
                   )}
                 </Form.Group>
 
@@ -166,9 +161,9 @@ const UpdateProfilePage = () => {
                     {...register("name")}
                   />
                   {errors.name && (
-                    <p className="invalid">
+                    <Alert variant="warning">
                       {errors.name.message || "Invalid value"}
-                    </p>
+                    </Alert>
                   )}
                 </Form.Group>
 
@@ -183,9 +178,9 @@ const UpdateProfilePage = () => {
                     })}
                   />
                   {errors.email && (
-                    <p className="invalid">
+                    <Alert variant="warning">
                       {errors.email.message || "Invalid value"}
-                    </p>
+                    </Alert>
                   )}
                 </Form.Group>
 
@@ -197,14 +192,14 @@ const UpdateProfilePage = () => {
                     {...register("password", {
                       minLength: {
                         message: "Enter at least 6 characters",
-                        value: 3,
+                        value: 6,
                       },
                     })}
                   />
                   {errors.password && (
-                    <p className="invalid">
+                    <Alert variant="warning">
                       {errors.password.message || "Invalid value"}
-                    </p>
+                    </Alert>
                   )}
                   <Form.Text>At least 6 characters</Form.Text>
                 </Form.Group>
@@ -217,7 +212,7 @@ const UpdateProfilePage = () => {
                     {...register("confirmPassword", {
                       minLength: {
                         message: "Enter at least 6 characters",
-                        value: 3,
+                        value: 6,
                       },
                       validate: (value) => {
                         return (
@@ -229,7 +224,9 @@ const UpdateProfilePage = () => {
                     })}
                   />
                   {errors.confirmPassword && (
-                    <p>{errors.confirmPassword.message || "Invalid value"}</p>
+                    <Alert variant="warning">
+                      {errors.confirmPassword.message || "Invalid value"}
+                    </Alert>
                   )}
                 </Form.Group>
 
@@ -238,7 +235,7 @@ const UpdateProfilePage = () => {
                 </Button>
 
                 {isUpdated && !isError && (
-                  <p style={{ color: "green" }}>Profile is now updated</p>
+                  <Alert variant="success">Profile is now updated</Alert>
                 )}
               </Form>
             </Card.Body>
