@@ -18,7 +18,7 @@ const CardList: React.FC<CardListProps> = ({
   return (
     <div className="list-wrapper">
       <div className="list-top">
-        <h1>{city}</h1>
+        <h2>{city}</h2>
         <Button onClick={handleButtonClick} className="close-button btn-secondary">
           X
         </Button>
