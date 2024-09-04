@@ -37,9 +37,9 @@ const Map = () => {
   const locations = {
     MyPosition: userLocation
       ? {
-        lat: userLocation.geolocation.coords.latitude,
-        lng: userLocation.geolocation.coords.longitude,
-      }
+          lat: userLocation.geolocation.coords.latitude,
+          lng: userLocation.geolocation.coords.longitude,
+        }
       : defaultCenter,
     Lund: { lat: 55.7046601, lng: 13.1910073 },
     Malmö: { lat: 55.6052931, lng: 13.0001566 },
@@ -63,14 +63,11 @@ const Map = () => {
     const selectedCity = value;
     const newCenter = locations[selectedCity as keyof typeof locations];
     setCenterPosition(newCenter);
-    console.log(selectedCity)
+    console.log(selectedCity);
 
     // Update the city and URL params
-    const newCity = value === "MyPosition"
-      ? userLocation
-        ? userLocation.cityName
-        : "Malmö"
-      : value
+    const newCity =
+      value === "MyPosition" ? (userLocation ? userLocation.cityName : "Malmö") : value;
     setCity(newCity);
     setSearchParams({ city: newCity });
   };
@@ -106,14 +103,14 @@ const Map = () => {
         <select
           onChange={handleLocationChange}
           style={{ padding: "8px", fontSize: "16px" }}
-        // value="Choose location" // Ensure the select value is synchronized with state
+          // value="Choose location" // Ensure the select value is synchronized with state
         >
           <option value="MyPosition">My position</option>
           <option value="Lund">Lund</option>
           <option value="Malmö">Malmö</option>
           <option value="Eslöv">Eslöv</option>
         </select>
-        {establishments && establishments.length > 1 && (
+        {establishments && establishments.length > 0 && (
           <Button onClick={() => setShowList(!showList)}>Visa lista</Button>
         )}
       </div>
@@ -169,6 +166,7 @@ const Map = () => {
           handleButtonClick={() => setShowList(!showList)}
           centerPosition={centerPosition}
           establishments={establishments}
+          city={city}
         ></CardList>
       )}
     </>

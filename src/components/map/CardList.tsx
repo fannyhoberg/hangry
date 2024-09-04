@@ -6,18 +6,24 @@ type CardListProps = {
   handleButtonClick: () => void;
   establishments: Establishment[];
   centerPosition: PositionCoords;
+  city: string;
 };
 
 const CardList: React.FC<CardListProps> = ({
   handleButtonClick,
   establishments,
   centerPosition,
+  city,
 }) => {
   return (
     <div className="list-wrapper">
-      <Button onClick={handleButtonClick} className="close-button btn-secondary">
-        X
-      </Button>
+      <div className="list-top">
+        <h1>{city}</h1>
+        <Button onClick={handleButtonClick} className="close-button btn-secondary">
+          X
+        </Button>
+      </div>
+
       <div className="list-group-container">
         {establishments.map((establishment) => (
           <ListCard
