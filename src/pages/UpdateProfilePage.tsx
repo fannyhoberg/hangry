@@ -146,9 +146,9 @@ const UpdateProfilePage = () => {
                     {...register("photos")}
                   />
                   {errors.photos && (
-                    <p className="invalid">
-                      {errors.photos.message || "Invalid value"}
-                    </p>
+                    <Alert variant="warning">
+                      {errors.photos.message || "Invalid"}
+                    </Alert>
                   )}
                 </Form.Group>
 
@@ -161,9 +161,9 @@ const UpdateProfilePage = () => {
                     {...register("name")}
                   />
                   {errors.name && (
-                    <p className="invalid">
+                    <Alert variant="warning">
                       {errors.name.message || "Invalid value"}
-                    </p>
+                    </Alert>
                   )}
                 </Form.Group>
 
@@ -178,9 +178,9 @@ const UpdateProfilePage = () => {
                     })}
                   />
                   {errors.email && (
-                    <p className="invalid">
+                    <Alert variant="warning">
                       {errors.email.message || "Invalid value"}
-                    </p>
+                    </Alert>
                   )}
                 </Form.Group>
 
