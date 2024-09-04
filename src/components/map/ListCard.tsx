@@ -7,6 +7,8 @@ type ListCardProps = {
   establishment: Establishment;
 };
 
+const noImageUrl = "https://fl-1.cdn.flockler.com/embed/no-image.svg";
+
 const ListCard: React.FC<ListCardProps> = ({ centerPosition, establishment }) => {
   const position: PositionCoords = {
     lat: establishment.geopoint.latitude,
@@ -18,7 +20,11 @@ const ListCard: React.FC<ListCardProps> = ({ centerPosition, establishment }) =>
   return (
     <Card className="list-card">
       <div className="card-img-wrapper">
-        {establishment.photoUrls && <Card.Img variant="top" src={establishment.photoUrls[0]} />}
+        {establishment.photoUrls ? (
+          <Card.Img variant="top" src={establishment.photoUrls[0]} />
+        ) : (
+          <Card.Img variant="top" src={noImageUrl} />
+        )}
       </div>
 
       <Card.Body>
