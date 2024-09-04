@@ -1,8 +1,11 @@
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap");
+
 .info-window-close {
-  position: fixed;
-  top: 20px;
-  right: 20px;
+  position: absolute;
   z-index: 2;
+  top: 0;
+  right: 0;
+  margin: 1rem 1rem 0 0;
 }
 
 // info window mobile view
@@ -12,12 +15,17 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 1;
+  z-index: 1002;
   padding: 20px;
+  background-color: rgba(249, 248, 244, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 // info window desktop view
 .info-window-desktop {
+  font-family: "Inconsolata";
   padding: 10px;
   border-radius: 8px;
   width: 30vw;

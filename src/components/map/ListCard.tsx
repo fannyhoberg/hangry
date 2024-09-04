@@ -3,6 +3,7 @@ import Card from "react-bootstrap/Card";
 import { Establishment, PositionCoords } from "../../types/Establishment.types";
 import { generateDirectionsURL } from "../../services/directionsAPI";
 import CardCarousel from "./CardCarousel";
+import CloseIcon from "../../assets/images/close-x.png";
 
 type ListCardProps = {
   centerPosition: PositionCoords;
@@ -13,7 +14,12 @@ type ListCardProps = {
 
 const noImageUrl = "https://fl-1.cdn.flockler.com/embed/no-image.svg";
 
-const ListCard: React.FC<ListCardProps> = ({ centerPosition, establishment, handleClose, userPosition }) => {
+const ListCard: React.FC<ListCardProps> = ({
+  centerPosition,
+  establishment,
+  handleClose,
+  userPosition,
+}) => {
   const origin = userPosition ?? centerPosition;
 
   const destinationCoords: PositionCoords = {
@@ -28,8 +34,8 @@ const ListCard: React.FC<ListCardProps> = ({ centerPosition, establishment, hand
   return (
     <Card className="list-card" key={establishment._id}>
       {handleClose && (
-        <Button onClick={handleClose} className="info-window-close">
-          X
+        <Button onClick={handleClose} className="info-window-close close-button">
+          <img src={CloseIcon} className="close-icon" />
         </Button>
       )}
       <div className="card-img-wrapper">
