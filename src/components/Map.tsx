@@ -18,6 +18,14 @@ const defaultCenter: PositionCoords = {
   lng: 13.001277692558267,
 };
 
+const createIcon = (text: string) =>
+  `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+      <circle cx="20" cy="20" r="18" fill="#5EA38A" stroke="#004F32" stroke-width="3" />
+      <text x="20" y="27" font-size="24" text-anchor="middle" fill="#004F32" font-family="Arial" font-weight="bold">${text}</text>
+    </svg>
+  `)}`;
+
 const Map = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialCity = searchParams.get("city") || "Malmö";
@@ -30,6 +38,10 @@ const Map = () => {
   const [centerPosition, setCenterPosition] = useState<PositionCoords>(defaultCenter);
   const [showList, setShowList] = useState<boolean>(false);
   const [map, setMap] = useState<google.maps.Map | null>(null);
+
+  const coffeeIcon = useMemo(() => createIcon("☕"), []);
+  const restaurantIcon = useMemo(() => createIcon("🍕"), []);
+  const barIcon = useMemo(() => createIcon("🍺"), []);
 
   const locations = useMemo(
     () => ({
@@ -44,28 +56,6 @@ const Map = () => {
       Eslöv: { lat: 55.83900838618268, lng: 13.30492141526424 },
     }),
     [userLocation]
-  );
-
-  const coffeeIcon = useMemo(
-    () =>
-      `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40">
-      <circle cx="20" cy="20" r="18" fill="#5EA38A" stroke="#004F32" stroke-width="3" />
-      <text x="20" y="27" font-size="25" text-anchor="middle" fill="#004F32" font-family="Arial" font-weight="bold">&#x2615;</text>
-    </svg>
-  `)}`,
-    []
-  );
-
-  const restaurantIcon = useMemo(
-    () =>
-      `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40">
-      <circle cx="20" cy="20" r="18" fill="#5EA38A" stroke="#004F32" stroke-width="3" />
-      <text x="20" y="27" font-size="24" text-anchor="middle" fill="#004F32" font-family="Arial" font-weight="bold">&#127790;</text>
-    </svg>
-  `)}`,
-    []
   );
 
   const handleMarkerClick = useCallback(
@@ -124,8 +114,8 @@ const Map = () => {
 
   return (
     <>
-      <div>
-        <select onChange={handleLocationChange} style={{ padding: "8px", fontSize: "16px" }}>
+      <div className="map-top">
+        <select onChange={handleLocationChange} className="city-select">
           <option value="MyPosition">My position</option>
           <option value="Lund">Lund</option>
           <option value="Malmö">Malmö</option>
@@ -154,6 +144,8 @@ const Map = () => {
                   lat: userLocation.geolocation.coords.latitude,
                   lng: userLocation.geolocation.coords.longitude,
                 }}
+                zIndex={2000}
+                icon={"https://fav.farm/👹"}
               />
             )}
 
@@ -169,7 +161,13 @@ const Map = () => {
                     onClick={() => handleMarkerClick(position, establishment)}
                     key={establishment._id}
                     position={position}
-                    icon={establishment.category[0] === "restaurant" ? restaurantIcon : coffeeIcon}
+                    icon={
+                      establishment.category.includes("bar")
+                        ? barIcon
+                        : establishment.category.includes("restaurant")
+                        ? restaurantIcon
+                        : coffeeIcon
+                    }
                   />
                 );
               })}

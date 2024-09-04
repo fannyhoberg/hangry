@@ -156,13 +156,35 @@ const EstablishmentForm: React.FC<EstablishmentFormProps> = ({ handleFormSubmit,
                     value="bar"
                     {...register("category")}
                 />
+                <Form.Check
+                    id="category-kiosk"
+                    label="Kiosk"
+                    type="checkbox"
+                    value="kiosk"
+                    {...register("category")}
+                />
                 {errors.category && (
                     <p style={{ color: "red" }}>{errors.category.message ?? "Invalid value"}</p>
                 )}
             </Form.Group>
 
             <Form.Group className="mb-3">
-                <Form.Label>Offer</Form.Label>
+                <Form.Label>Offer*</Form.Label>
+                <Form.Check
+                    id="offer-breakfast"
+                    label="Breakfast"
+                    type="checkbox"
+                    value="breakfast"
+                    {...register("offer", {
+                        validate: () => {
+                            const selectedCategories = getValues("offer");
+                            return (
+                                (selectedCategories && selectedCategories.length > 0) ||
+                                "You must select at least one offer"
+                            );
+                        },
+                    })}
+                />
                 <Form.Check
                     id="offer-lunch"
                     label="Lunch"
@@ -182,6 +204,20 @@ const EstablishmentForm: React.FC<EstablishmentFormProps> = ({ handleFormSubmit,
                     label="A la carte"
                     type="checkbox"
                     value="a-la-carte"
+                    {...register("offer")}
+                />
+                <Form.Check
+                    id="offer-gluten-free"
+                    label="Gluten free options"
+                    type="checkbox"
+                    value="gluten-free"
+                    {...register("offer")}
+                />
+                <Form.Check
+                    id="offer-vegan"
+                    label="Vegan options"
+                    type="checkbox"
+                    value="vegan"
                     {...register("offer")}
                 />
             </Form.Group>

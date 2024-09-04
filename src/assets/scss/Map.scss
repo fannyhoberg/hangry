@@ -1,4 +1,20 @@
 .map-wrapper {
   width: 100%;
   height: 500px;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px black solid;
+}
+
+.map-top {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding-bottom: 1rem;
+}
+
+.city-select {
+  border-radius: 0.6rem;
+  padding: 0 0.5rem;
+  height: 2.25rem;
 }

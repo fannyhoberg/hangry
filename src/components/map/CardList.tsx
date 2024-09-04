@@ -1,6 +1,7 @@
 import { Button } from "react-bootstrap";
 import { Establishment, PositionCoords } from "../../types/Establishment.types";
 import ListCard from "./ListCard";
+import CloseIcon from "../../assets/images/close-x.png";
 
 type CardListProps = {
   handleButtonClick: () => void;
@@ -15,17 +16,19 @@ const CardList: React.FC<CardListProps> = ({
   centerPosition,
   city,
 }) => {
+  const sortedEstablishments = establishments.sort((a, b) => a.name.localeCompare(b.name));
+
   return (
     <div className="list-wrapper">
       <div className="list-top">
         <h2>{city}</h2>
-        <Button onClick={handleButtonClick} className="close-button btn-secondary">
-          X
+        <Button onClick={handleButtonClick} className="close-button">
+          <img src={CloseIcon} className="close-icon" />
         </Button>
       </div>
 
       <div className="list-group-container">
-        {establishments.map((establishment) => (
+        {sortedEstablishments.map((establishment) => (
           <ListCard
             key={establishment._id}
             establishment={establishment}

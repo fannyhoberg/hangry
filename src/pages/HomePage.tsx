@@ -1,11 +1,14 @@
-import { Container } from "react-bootstrap";
+import { Container, Image } from "react-bootstrap";
 import Map from "../components/Map";
+import HangryLogo from "../assets/images/hangry-logo.png";
 
 const HomePage = () => {
   return (
     <Container className="py-3 center-y">
       <div>
-        <h1>Welcome to Hangry</h1>
+        <div id="header-logo-wrapper">
+          <Image src={HangryLogo} id="header-logo" />
+        </div>
         <Map />
       </div>
     </Container>
