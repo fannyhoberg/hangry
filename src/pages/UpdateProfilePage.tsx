@@ -136,7 +136,7 @@ const UpdateProfilePage = () => {
                     src={userPhotoUrl || "https://via.placeholder.com/200"}
                     fluid
                     width={200}
-                    height={200}
+                    className="circle-img"
                     roundedCircle
                   />
                 </div>
