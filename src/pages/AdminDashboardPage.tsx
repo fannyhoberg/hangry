@@ -43,6 +43,10 @@ const AdminDashboardPage = () => {
       accessorKey: "city",
       header: "City",
     },
+    {
+      accessorKey: "category",
+      header: "Category",
+    },
   ];
 
   const usersColumns: ColumnDef<User>[] = [
