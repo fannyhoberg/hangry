@@ -119,8 +119,8 @@ const Map = () => {
 
   return (
     <>
-      <div>
-        <select onChange={handleLocationChange} style={{ padding: "8px", fontSize: "16px" }}>
+      <div className="map-top">
+        <select onChange={handleLocationChange} className="city-select">
           <option value="MyPosition">My position</option>
           <option value="Lund">Lund</option>
           <option value="Malmö">Malmö</option>

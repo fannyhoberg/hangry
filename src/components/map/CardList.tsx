@@ -1,6 +1,7 @@
 import { Button } from "react-bootstrap";
 import { Establishment, PositionCoords } from "../../types/Establishment.types";
 import ListCard from "./ListCard";
+import CloseIcon from "../../assets/images/close-x.png";
 
 type CardListProps = {
   handleButtonClick: () => void;
@@ -19,8 +20,8 @@ const CardList: React.FC<CardListProps> = ({
     <div className="list-wrapper">
       <div className="list-top">
         <h2>{city}</h2>
-        <Button onClick={handleButtonClick} className="close-button btn-secondary">
-          X
+        <Button onClick={handleButtonClick} className="close-button">
+          <img src={CloseIcon} className="close-icon" />
         </Button>
       </div>
 
